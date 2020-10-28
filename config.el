@@ -9,15 +9,48 @@
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
 (setq org-directory "~/Dropbox/org-mode")
+(setq org-journal-dir (concat org-directory "/journal"))
+
+
+; Journal
+(defconst org-mode-daily-file
+    (let ((daily-name (format-time-string "%Y-%m-%d [%a]")))
+    (expand-file-name (concat org-journal-dir "/" daily-name ".org")))
+    "Today's org mode journal file")
+
+(defconst org-mode-weekly-file
+    (let ((weekly-name (format-time-string "%Y-%m W%W")))
+    (expand-file-name (concat org-journal-dir "/" weekly-name ".org")))
+    "Week's org mode journal file")
+
+(defconst org-mode-monthly-file
+    (let ((monthly-name (format-time-string "%Y-%m")))
+    (expand-file-name (concat org-journal-dir "/" monthly-name ".org")))
+    "Month's org mode journal file")
+
+(map! :desc "Daily Journal"
+    "M-n d" #'(lambda () (interactive) (find-file org-mode-daily-file))
+    :desc "Weekly Journal"
+    "M-n w" #'(lambda () (interactive) (find-file org-mode-weekly-file))
+    :desc "Monthly Journal"
+    "M-n m" #'(lambda () (interactive) (find-file org-mode-monthly-file)))
 
 (after! org
   (require 'org-bullets)  ; Nicer bullets in org-mode
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
-  (setq org-agenda-files '("~/Org/agenda.org")
-        org-default-notes-file (expand-file-name "notes.org" org-directory)
+
+  (setq org-agenda-files (list
+                         (concat org-directory "/work/xplm/projects")
+                         (concat org-directory "/work/xplm/ecad")
+                         (concat org-directory "/work/xplm/ecad/customers")
+                         (concat org-directory "/agenda")
+                         (concat org-directory "/work/xplm/clients")
+                         ))
+
+  (setq org-default-notes-file (expand-file-name "notes.org" org-directory)
         org-ellipsis " ▼ "
         org-log-done 'time
-        org-journal-dir (concat org-directory "/journal/")
+        org-journal-dir (concat org-directory "/journal")
         org-journal-date-format "%B %d, %Y (%A)"
         org-journal-file-format "%Y-%m-%d.org"
         org-hide-emphasis-markers t
@@ -31,9 +64,14 @@
           '((sequence
              "TODO(t)"           ; A task that is ready to be tackled
              "WAIT(w)"           ; Something is holding up this task
+             "NEXT(w)"           ; To be completed soon
              "|"                 ; The pipe necessary to separate "active" states and "inactive" states
              "DONE(d)"           ; Task has been completed
              "CANCELLED(c)" )))) ; Task has been cancelled
+
+(general-define-key
+ "<f12>" '(org-agenda M :which-key "Home")
+)
 
 (map! :leader
       :desc "List bookmarks"
