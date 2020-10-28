@@ -142,3 +142,6 @@
       :leader
       :desc "Edit doom packages.el"
       "j p" #'(lambda () (interactive) (find-file "~/.doom.d/packages.el")))
+
+(after! yasnippet
+  (setq yas--default-user-snippets-dir "~/.doom.d/snippets"))

@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: for-in-range
+# key: fr
+# --
+for ${var} in range(${from}, ${to}, ${increment}):

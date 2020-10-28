@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: for-in-collection
+# key: fc
+# --
+for ${var} in ${collection}:

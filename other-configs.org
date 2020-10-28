@@ -1,4 +1,3 @@
 * Inspiration
-- https://rgoswami.me/dotdoom/config.html
-- [[https://gitlab.com/dwt1/dotfiles/-/blob/master/.doom.d/config.org][DistroTube]]
+- [[https://gitlab.com/dwt1/dotfiles/-/raw/master/.doom.d/config.org][DistroTube]]
 - https://pages.sachachua.com/.emacs.d/Sacha.html#orgce6f46d
