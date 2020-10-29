@@ -69,9 +69,41 @@
              "DONE(d)"           ; Task has been completed
              "CANCELLED(c)" )))) ; Task has been cancelled
 
-(general-define-key
- "<f12>" '(org-agenda M :which-key "Home")
-)
+(defun flatten (lst)
+  (labels ((rflatten (lst1 acc)
+             (dolist (el lst1)
+               (if (listp el)
+                   (setf acc (rflatten el acc))
+                   (push el acc)))
+             acc))
+    (reverse (rflatten lst nil))))
+
+(defun org-property-values-in-agenda (key)
+  (interactive))
+  ;;(delq nil (delete-dups (flatten (mapcar (org-property-values key) org-agenda-files)))))
+  ;;(delete-dups (flatten (mapcar (org-property-values key) org-agenda-files))))
+
+(defun org-agenda-prop-search (key value)
+  "Show TODOs that have match key=value"
+  (let ((org-use-property-inheritance
+         (append org-use-property-inheritance '(key)))
+        )
+    (org-tags-view t (format "%s=\"%s\"/TODO" key value))
+    )
+  )
+
+(defun org-agenda-prop-search-customer(value)
+  "Search for value in property 'customer'; interactively set 'value'"
+  (interactive
+   (list
+    (completing-read "customer" (org-property-values "customer"))))
+  (org-agenda-prop-search "customer" value))
+
+
+(map! :desc "Agenda View"
+      ;;"<f12>" #'(lambda () (interactive) (org-agenda nil "M"))
+      "<f12>" #'(lambda () (interactive) (call-interactively #'org-agenda-prop-search-customer nil))
+      "<f11>" #'(lambda () (interactive) (message (org-property-values-in-agenda "customer"))))
 
 (map! :leader
       :desc "List bookmarks"
