@@ -64,25 +64,12 @@
           '((sequence
              "TODO(t)"           ; A task that is ready to be tackled
              "WAIT(w)"           ; Something is holding up this task
-             "NEXT(w)"           ; To be completed soon
+             "FUTURE(f)"         ; To be completed in the unspecified future
              "|"                 ; The pipe necessary to separate "active" states and "inactive" states
              "DONE(d)"           ; Task has been completed
              "CANCELLED(c)" )))) ; Task has been cancelled
 
-(defun flatten (lst)
-  (labels ((rflatten (lst1 acc)
-             (dolist (el lst1)
-               (if (listp el)
-                   (setf acc (rflatten el acc))
-                   (push el acc)))
-             acc))
-    (reverse (rflatten lst nil))))
-
-(defun org-property-values-in-agenda (key)
-  (interactive))
-  ;;(delq nil (delete-dups (flatten (mapcar (org-property-values key) org-agenda-files)))))
-  ;;(delete-dups (flatten (mapcar (org-property-values key) org-agenda-files))))
-
+(setq xplm-customers '("insitu" "ddc" "intuitive_surgical" "molex" "telestream"))
 (defun org-agenda-prop-search (key value)
   "Show TODOs that have match key=value"
   (let ((org-use-property-inheritance
@@ -92,17 +79,20 @@
     )
   )
 
-(defun org-agenda-prop-search-customer(value)
-  "Search for value in property 'customer'; interactively set 'value'"
-  (interactive
-   (list
-    (completing-read "customer" (org-property-values "customer"))))
-  (org-agenda-prop-search "customer" value))
+(defun org-agenda-prop-search-interactive(key list)
+  "Search for VALUE in property KEY; interactively set VALUE"
+  (let ((value (completing-read (format "%s: " key) list)))
+    (org-agenda-prop-search key value)))
+
+;;(defun org-agenda-prop-search-customer(value)
+  ;;(interactive
+   ;;(list
+    ;;(completing-read "customer" (org-property-values "customer"))))
+  ;;(org-agenda-prop-search "customer" value))
 
 
 (map! :desc "Agenda View"
-      ;;"<f12>" #'(lambda () (interactive) (org-agenda nil "M"))
-      "<f12>" #'(lambda () (interactive) (call-interactively #'org-agenda-prop-search-customer nil))
+      "<f12>" #'(lambda () (interactive) (org-agenda-prop-search-interactive "customer" xplm-customers))
       "<f11>" #'(lambda () (interactive) (message (org-property-values-in-agenda "customer"))))
 
 (map! :leader
