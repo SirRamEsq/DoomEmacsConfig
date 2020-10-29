@@ -51,3 +51,4 @@
 
 
 (package! org-bullets)
+(package! highlight-symbol)
