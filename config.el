@@ -50,6 +50,7 @@
   (setq org-default-notes-file (expand-file-name "notes.org" org-directory)
         org-ellipsis " ▼ "
         org-log-done 'time
+        org-use-property-inheritance t
         org-journal-dir (concat org-directory "/journal")
         org-journal-date-format "%B %d, %Y (%A)"
         org-journal-file-format "%Y-%m-%d.org"
@@ -70,30 +71,23 @@
              "CANCELLED(c)" )))) ; Task has been cancelled
 
 (setq xplm-customers '("insitu" "ddc" "intuitive_surgical" "molex" "telestream"))
-(defun org-agenda-prop-search (key value)
-  "Show TODOs that have match key=value"
-  (let ((org-use-property-inheritance
-         (append org-use-property-inheritance '(key)))
-        )
-    (org-tags-view t (format "%s=\"%s\"/TODO" key value))
-    )
-  )
+(defun org-agenda-prop-search (property value)
+  "Show TODOs that have match PROPERTY = VALUE"
+  (org-tags-view t (format "%s=\"%s\"/TODO" property value)))
+  ;(let ((org-use-property-inheritance
+         ;(append org-use-property-inheritance '(property)))
+        ;)
+    ;(org-tags-view t (format "%s=\"%s\"/TODO" property value))
+    ;)
+  ;)
 
 (defun org-agenda-prop-search-interactive(key list)
   "Search for VALUE in property KEY; interactively set VALUE"
   (let ((value (completing-read (format "%s: " key) list)))
     (org-agenda-prop-search key value)))
 
-;;(defun org-agenda-prop-search-customer(value)
-  ;;(interactive
-   ;;(list
-    ;;(completing-read "customer" (org-property-values "customer"))))
-  ;;(org-agenda-prop-search "customer" value))
-
-
 (map! :desc "Agenda View"
-      "<f12>" #'(lambda () (interactive) (org-agenda-prop-search-interactive "customer" xplm-customers))
-      "<f11>" #'(lambda () (interactive) (message (org-property-values-in-agenda "customer"))))
+      "<f12>" #'(lambda () (interactive) (org-agenda-prop-search-interactive "customer" xplm-customers)))
 
 (map! :leader
       :desc "List bookmarks"

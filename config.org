@@ -66,6 +66,7 @@ customer="insitu"
   (setq org-default-notes-file (expand-file-name "notes.org" org-directory)
         org-ellipsis " ▼ "
         org-log-done 'time
+        org-use-property-inheritance t
         org-journal-dir (concat org-directory "/journal")
         org-journal-date-format "%B %d, %Y (%A)"
         org-journal-file-format "%Y-%m-%d.org"
@@ -97,12 +98,13 @@ customer="insitu"
 (setq xplm-customers '("insitu" "ddc" "intuitive_surgical" "molex" "telestream"))
 (defun org-agenda-prop-search (property value)
   "Show TODOs that have match PROPERTY = VALUE"
-  (let ((org-use-property-inheritance
-         (append org-use-property-inheritance '(property)))
-        )
-    (org-tags-view t (format "%s=\"%s\"/TODO" property value))
-    )
-  )
+  (org-tags-view t (format "%s=\"%s\"/TODO" property value)))
+  ;(let ((org-use-property-inheritance
+         ;(append org-use-property-inheritance '(property)))
+        ;)
+    ;(org-tags-view t (format "%s=\"%s\"/TODO" property value))
+    ;)
+  ;)
 
 (defun org-agenda-prop-search-interactive(key list)
   "Search for VALUE in property KEY; interactively set VALUE"
