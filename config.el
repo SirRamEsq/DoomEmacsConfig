@@ -59,6 +59,7 @@
         org-journal-date-format "%B %d, %Y (%A)"
         org-journal-file-format "%Y-%m-%d.org"
         org-hide-emphasis-markers t
+        browse-url-browser-function 'browse-url-default-browser
         ;; ex. of org-link-abbrev-alist in action
         ;; [[arch-wiki:Name_of_Page][Description]]
         org-link-abbrev-alist    ; This overwrites the default Doom org-link-abbrev-list
@@ -117,17 +118,6 @@
 (evil-define-key 'normal peep-dired-mode-map (kbd "j") 'peep-dired-next-file
                                              (kbd "k") 'peep-dired-prev-file)
 (add-hook 'peep-dired-hook 'evil-normalize-keymaps)
-
-(setq browse-url-browser-function 'eww-browse-url)
-(map! :leader
-      :desc "Eww web browser"
-      "a e w" #'eww
-      :leader
-      :desc "Eww reload page"
-      "a e R" #'eww-reload
-      :leader
-      :desc "Search web for text between BEG/END"
-      "a e s" #'eww-search-words)
 
 (setq doom-font (font-spec :family "Source Code Variable" :size 14)
       doom-variable-pitch-font (font-spec :family "Ubuntu" :size 14)
