@@ -52,3 +52,4 @@
 
 (package! org-bullets)
 (package! highlight-symbol)
+(package! go-mode)

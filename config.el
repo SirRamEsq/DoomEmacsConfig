@@ -6,6 +6,11 @@
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type t)
 
+; XPLM ECAD File Associations
+(add-to-list 'auto-mode-alist '("\\.classification\\'" . ruby-mode))
+(add-to-list 'auto-mode-alist '("\\.datamodel\\'" . ruby-mode))
+(add-to-list 'auto-mode-alist '("\\.release\\'" . ruby-mode))
+
 (map! :leader
       :desc "Highlight"
       "a h" #'(lambda () (interactive) (highlight-symbol)))
@@ -135,23 +140,29 @@
       "h t" #'counsel-load-theme)
 
 (map! :leader
-      :desc "root org dir"
-      "j o" #'(lambda () (interactive) (dired org-directory))
+      :desc "root org"
+      "j d o" #'(lambda () (interactive) (dired org-directory))
       :leader
-      :desc "root work org dir"
-      "j w" #'(lambda () (interactive) (dired (concat org-directory "/work/xplm")))
+      :desc "root work"
+      "j d w w" #'(lambda () (interactive) (dired (concat org-directory "/work/xplm")))
+      :leader
+      :desc "work ecad"
+      "j d w e" #'(lambda () (interactive) (dired (concat org-directory "/work/xplm/ecad")))
+      :leader
+      :desc "work time"
+      "j f w t" #'(lambda () (interactive) (find-file (concat org-directory "/work/xplm/time-tracking.org")))
       :leader
       :desc "Edit doom config.org"
-      "j c" #'(lambda () (interactive) (find-file "~/.doom.d/config.org"))
+      "j f c" #'(lambda () (interactive) (find-file "~/.doom.d/config.org"))
       :leader
       :desc "Edit eshell aliases"
-      "j e" #'(lambda () (interactive) (find-file "~/.doom.d/aliases"))
+      "j f e" #'(lambda () (interactive) (find-file "~/.doom.d/aliases"))
       :leader
       :desc "Edit doom init.el"
-      "j i" #'(lambda () (interactive) (find-file "~/.doom.d/init.el"))
+      "j f i" #'(lambda () (interactive) (find-file "~/.doom.d/init.el"))
       :leader
       :desc "Edit doom packages.el"
-      "j p" #'(lambda () (interactive) (find-file "~/.doom.d/packages.el")))
+      "j f p" #'(lambda () (interactive) (find-file "~/.doom.d/packages.el")))
 
 (after! yasnippet
   (setq yas--default-user-snippets-dir "~/.doom.d/snippets"))

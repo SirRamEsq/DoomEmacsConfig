@@ -14,6 +14,12 @@
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type t)
+
+; XPLM ECAD File Associations
+(add-to-list 'auto-mode-alist '("\\.classification\\'" . ruby-mode))
+(add-to-list 'auto-mode-alist '("\\.datamodel\\'" . ruby-mode))
+(add-to-list 'auto-mode-alist '("\\.release\\'" . ruby-mode))
+
 #+END_SRC
 * Highlight
 SPC a h for highlight
@@ -201,37 +207,51 @@ Setting the theme to doom-one.  To try out new themes, I set a keybinding for co
 
 * FILE-SYSTEM SHORTCUTS
 - Shortcuts to often used locations on the file system
-'SPC j <key>'
+'SPC j f/d <key>'
 'j' for 'Jump'
+'f' for 'File'
+'d' for 'Dir'
 
-| PATH TO FILE           | DESCRIPTION             | KEYBINDING |
-|------------------------+-------------------------+------------|
-| <ORG_DIR>              | /root org dir/          | SPC / o    |
-| <ORG_DIR>/work         | /root work org dir/     | SPC / w    |
-| ~/.doom.d/config.org"  | /Edit doom config.org/  | SPC / c    |
-| ~/.doom.d/aliases"     | /Edit eshell aliases/   | SPC / e    |
-| ~/.doom.d/init.el"     | /Edit doom init.el/     | SPC / i    |
-| ~/.doom.d/packages.el" | /Edit doom packages.el/ | SPC / p    |
+| FILE                             | DESCRIPTION           | KEYBINDING  |
+|----------------------------------+-----------------------+-------------|
+| ~/.doom.d/config.org             | /Edit doom config.org/  | SPC j f c   |
+| ~/.doom.d/aliases                | /Edit eshell aliases/   | SPC j f e   |
+| ~/.doom.d/init.el                | /Edit doom init.el/     | SPC j f i   |
+| ~/.doom.d/packages.el            | /Edit doom packages.el/ | SPC j f p   |
+| <ORG_DIR>/work/time-tracking.org | Work Time Tracking    | SPC j f w t |
+
+
+| DIR                 | DESCRIPTION       | KEYBINDING  |
+|---------------------+-------------------+-------------|
+| <ORG_DIR>           | /root org dir/      | SPC j d o   |
+| <ORG_DIR>/work      | /root work org dir/ | SPC j d w w |
+| <ORG_DIR>/work/ecad | /root work org dir/ | SPC j d w e |
 
 #+BEGIN_SRC emacs-lisp
 (map! :leader
-      :desc "root org dir"
-      "j o" #'(lambda () (interactive) (dired org-directory))
+      :desc "root org"
+      "j d o" #'(lambda () (interactive) (dired org-directory))
       :leader
-      :desc "root work org dir"
-      "j w" #'(lambda () (interactive) (dired (concat org-directory "/work/xplm")))
+      :desc "root work"
+      "j d w w" #'(lambda () (interactive) (dired (concat org-directory "/work/xplm")))
+      :leader
+      :desc "work ecad"
+      "j d w e" #'(lambda () (interactive) (dired (concat org-directory "/work/xplm/ecad")))
+      :leader
+      :desc "work time"
+      "j f w t" #'(lambda () (interactive) (find-file (concat org-directory "/work/xplm/time-tracking.org")))
       :leader
       :desc "Edit doom config.org"
-      "j c" #'(lambda () (interactive) (find-file "~/.doom.d/config.org"))
+      "j f c" #'(lambda () (interactive) (find-file "~/.doom.d/config.org"))
       :leader
       :desc "Edit eshell aliases"
-      "j e" #'(lambda () (interactive) (find-file "~/.doom.d/aliases"))
+      "j f e" #'(lambda () (interactive) (find-file "~/.doom.d/aliases"))
       :leader
       :desc "Edit doom init.el"
-      "j i" #'(lambda () (interactive) (find-file "~/.doom.d/init.el"))
+      "j f i" #'(lambda () (interactive) (find-file "~/.doom.d/init.el"))
       :leader
       :desc "Edit doom packages.el"
-      "j p" #'(lambda () (interactive) (find-file "~/.doom.d/packages.el")))
+      "j f p" #'(lambda () (interactive) (find-file "~/.doom.d/packages.el")))
 #+END_SRC
 
 * YAS
