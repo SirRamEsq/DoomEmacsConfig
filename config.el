@@ -63,6 +63,7 @@
         org-journal-dir (concat org-directory "/journal")
         org-journal-date-format "%B %d, %Y (%A)"
         org-journal-file-format "%Y-%m-%d.org"
+        org-startup-folded t
         org-hide-emphasis-markers t
         browse-url-browser-function 'browse-url-default-browser
         ;; ex. of org-link-abbrev-alist in action

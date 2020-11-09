@@ -1,0 +1,7 @@
+#+TITLE: Todo
+
+* TODO Projectile doesn't seem to register directories with a .svn folder :Windows:
+~/Go/XPLM
+- .svn folder is hidden
+- Does this matter?
+* TODO Dired doesn't show hidden folders? :Windows:
