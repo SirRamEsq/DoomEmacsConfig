@@ -52,4 +52,6 @@
 
 (package! org-bullets)
 (package! highlight-symbol)
-(package! go-mode)
+(package! gdscript-mode
+          :recipe (:host github
+                   :repo "GDQuest/emacs-gdscript-mode"))

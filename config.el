@@ -11,6 +11,8 @@
 (add-to-list 'auto-mode-alist '("\\.datamodel\\'" . ruby-mode))
 (add-to-list 'auto-mode-alist '("\\.release\\'" . ruby-mode))
 
+(require 'gdscript-mode)
+
 (map! :leader
       :desc "Highlight"
       "a h" #'(lambda () (interactive) (highlight-symbol)))
@@ -63,7 +65,7 @@
         org-journal-dir (concat org-directory "/journal")
         org-journal-date-format "%B %d, %Y (%A)"
         org-journal-file-format "%Y-%m-%d.org"
-        org-startup-folded t
+        ;org-startup-folded t
         org-hide-emphasis-markers t
         browse-url-browser-function 'browse-url-default-browser
         ;; ex. of org-link-abbrev-alist in action
@@ -167,3 +169,25 @@
 
 (after! yasnippet
   (setq yas--default-user-snippets-dir "~/.doom.d/snippets"))
+
+(setq company-backends
+      '((company-files          ; files & directory
+         company-keywords       ; keywords
+         company-capf           ; CompletAtPointFunction defined by major mode
+         company-yasnippet      ; Snippets
+         company-dabbrev-code   ; Symbols in the current buffer that aren't comments or strings
+         )
+        (company-abbrev company-dabbrev) ; Backend for the company-abbrev function
+        ))
+
+;; Enable Auto-complete globally
+(add-hook 'after-init-hook 'global-company-mode)
+
+(setq-default company-idle-delay 0)
+(setq-default company-minimum-prefix-length 2) ; Show suggestions after entering characters
+(setq-default company-selection-wrap-around t)
+; Use tab key to cycle through suggestions.
+; ('tng' means 'tab and go')
+(company-tng-configure-default)
+
+(add-hook 'gdscript-mode-hook #'(lambda () (modify-syntax-entry ?_ "w")))
