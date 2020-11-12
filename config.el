@@ -24,19 +24,19 @@
 
 
 ; Journal
+(defun daily-name   (&optional time) (format-time-string "%Y-%m-%d [%a]" time))
+(defun weekly-name  (&optional time) (format-time-string "%Y-%m W%W" time))
+(defun monthly-name (&optional time) (format-time-string "%Y-%m" time))
 (defconst org-mode-daily-file
-    (let ((daily-name (format-time-string "%Y-%m-%d [%a]")))
-    (expand-file-name (concat org-journal-dir "/" daily-name ".org")))
+    (expand-file-name (concat org-journal-dir "/" (daily-name) ".org"))
     "Today's org mode journal file")
 
 (defconst org-mode-weekly-file
-    (let ((weekly-name (format-time-string "%Y-%m W%W")))
-    (expand-file-name (concat org-journal-dir "/" weekly-name ".org")))
+    (expand-file-name (concat org-journal-dir "/" (weekly-name) ".org"))
     "Week's org mode journal file")
 
 (defconst org-mode-monthly-file
-    (let ((monthly-name (format-time-string "%Y-%m")))
-    (expand-file-name (concat org-journal-dir "/" monthly-name ".org")))
+    (expand-file-name (concat org-journal-dir "/" (monthly-name) ".org"))
     "Month's org mode journal file")
 
 (map! :desc "Daily Journal"
@@ -81,7 +81,40 @@
              "FUTURE(f)"         ; To be completed in the unspecified future
              "|"                 ; The pipe necessary to separate "active" states and "inactive" states
              "DONE(d)"           ; Task has been completed
+             "DELEGATED(z)"      ; Task is someone else's responsibility
              "CANCELLED(c)" )))) ; Task has been cancelled
+
+;; Date Tree
+;(setq-default org-reverse-datetree-level-formats
+;              '("%Y"                    ; year
+;                (lambda (time) (format-time-string "%Y-%m %B" (org-reverse-datetree-monday time))) ; month
+;                "%Y W%W"                ; week
+;                "%Y-%m-%d %A"           ; date
+;                ))
+(setq-default org-reverse-datetree-level-formats'("%Y W%W")) ; Only week; Year and month are file specific
+
+; Define method to archive to a specific file based on the year and month
+(defun custom-archive-command (&rest arg)
+  ;(interactive "P")
+  (interactive)
+  (let ((time-stamp (org-reverse-datetree--get-entry-time
+                     ;:ask-always t
+                     :prefer`("CLOSED" "DEADLINE" "SCHEDULED"))))
+  (org-reverse-datetree-refile-to-file
+   (concat org-directory "/agenda-archive/" (monthly-name time-stamp) ".org")
+   time-stamp)))
+
+(setq org-archive-default-command 'custom-archive-command)
+
+(map! :leader
+      :map org-mode-map
+      :desc "Archive"
+      "m A" #'(lambda () (interactive) (org-archive-subtree-default)))
+
+; Ensure Package is loaded after org
+; Will also immediately load org on startup without additional args
+(use-package! org-reverse-datetree)
+  ;:hook (org-mode-hook))
 
 (setq xplm-customers '("insitu" "ddc" "intuitive_surgical" "molex" "telestream"))
 (defun org-agenda-prop-search (property value)
@@ -144,7 +177,9 @@
 
 (map! :leader
       :desc "root org"
-      "j d o" #'(lambda () (interactive) (dired org-directory))
+      "j d o o" #'(lambda () (interactive) (dired org-directory))
+      :desc "org agenda"
+      "j d o a" #'(lambda () (interactive) (dired (concat org-directory "/agenda")))
       :leader
       :desc "root work"
       "j d w w" #'(lambda () (interactive) (dired (concat org-directory "/work/xplm")))
@@ -154,6 +189,9 @@
       :leader
       :desc "work time"
       "j f w t" #'(lambda () (interactive) (find-file (concat org-directory "/work/xplm/time-tracking.org")))
+      :leader
+      :desc "Edit todo.org"
+      "j f o a" #'(lambda () (interactive) (find-file (concat org-directory "/agenda/todo.org")))
       :leader
       :desc "Edit doom config.org"
       "j f c" #'(lambda () (interactive) (find-file "~/.doom.d/config.org"))
@@ -190,4 +228,7 @@
 ; ('tng' means 'tab and go')
 (company-tng-configure-default)
 
+; Add underscore to gdscrit mode
 (add-hook 'gdscript-mode-hook #'(lambda () (modify-syntax-entry ?_ "w")))
+; Add dash to emacs-lisp mode
+(add-hook 'emacs-lisp-mode-hook #'(lambda () (modify-syntax-entry ?- "w")))
