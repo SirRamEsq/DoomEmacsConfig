@@ -84,6 +84,7 @@ customer="insitu"
         org-journal-dir (concat org-directory "/journal")
         org-journal-date-format "%B %d, %Y (%A)"
         org-journal-file-format "%Y-%m-%d.org"
+        +org-capture-todo-file (concat org-directory "/agenda/todo.org")
         ;org-startup-folded t
         org-hide-emphasis-markers t
         browse-url-browser-function 'browse-url-default-browser
