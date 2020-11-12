@@ -134,7 +134,9 @@
     (org-agenda-prop-search key value)))
 
 (map! :desc "Agenda View"
-      "<f12>" #'(lambda () (interactive) (org-agenda-prop-search-interactive "customer" xplm-customers)))
+      "<f12> p" #'(lambda () (interactive) (org-tags-view t "-@XPLM-@LOUIE"))
+      "<f12> w w" #'(lambda () (interactive) (org-tags-view t "@XPLM"))
+      "<f12> w p" #'(lambda () (interactive) (org-agenda-prop-search-interactive "customer" xplm-customers)))
 
 (map! :leader
       :desc "List bookmarks"
