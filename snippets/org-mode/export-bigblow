@@ -2,4 +2,4 @@
 # name: export-bigblow
 # key: ebb
 # --
-#+SETUPFILE: ~/.doom.d/web-export-setup/fniessen-org-html-themes/setup/theme-bigblow.setup
+#+SETUPFILE: ~/.doom.d/web-export-setup/fniessen-org-html-themes/org/theme-bigblow.setup

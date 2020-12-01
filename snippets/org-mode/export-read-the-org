@@ -2,4 +2,4 @@
 # name: export-read-the-org
 # key: erto
 # --
-#+SETUPFILE: ~/.doom.d/web-export-setup/fniessen-org-html-themes/setup/theme-readtheorg.setup
+#+SETUPFILE: ~/.doom.d/web-export-setup/fniessen-org-html-themes/org/theme-readtheorg.setup
