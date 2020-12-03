@@ -67,7 +67,7 @@
         org-journal-file-format "%Y-%m-%d.org"
         +org-capture-todo-file (concat org-directory "/agenda/todo.org")
         ;org-startup-folded t
-        org-hide-emphasis-markers t
+        org-hide-emphasis-markers nil
         browse-url-browser-function 'browse-url-default-browser
         ;; ex. of org-link-abbrev-alist in action
         ;; [[arch-wiki:Name_of_Page][Description]]
@@ -117,7 +117,7 @@
 (use-package! org-reverse-datetree)
   ;:hook (org-mode-hook))
 
-(setq xplm-customers '("insitu" "ddc" "intuitive_surgical" "molex" "telestream"))
+(setq xplm-customers '("insitu" "ddc" "telestream"))
 (defun org-agenda-prop-search (property value)
   "Show TODOs that have match PROPERTY = VALUE"
   (org-tags-view t (format "%s=\"%s\"/TODO" property value)))

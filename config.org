@@ -86,7 +86,7 @@ customer="insitu"
         org-journal-file-format "%Y-%m-%d.org"
         +org-capture-todo-file (concat org-directory "/agenda/todo.org")
         ;org-startup-folded t
-        org-hide-emphasis-markers t
+        org-hide-emphasis-markers nil
         browse-url-browser-function 'browse-url-default-browser
         ;; ex. of org-link-abbrev-alist in action
         ;; [[arch-wiki:Name_of_Page][Description]]
