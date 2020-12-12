@@ -173,7 +173,27 @@
   '(font-lock-comment-face :slant italic)
   '(font-lock-keyword-face :slant italic))
 
-(setq doom-theme 'doom-one)
+;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; DARK THEME FAVORITES ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; (setq doom-theme 'doom-one)
+;; (setq doom-theme 'doom-gruvbox)
+;; (setq doom-theme 'doom-horizon)
+;; (setq doom-theme 'doom-molokai)
+(setq doom-theme 'doom-oceanic-next)
+;; (setq doom-theme 'doom-tomorrow-night)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; MID-LIGHT THEME FAVORITES ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; (setq doom-theme 'doom-nova)
+;; (setq doom-theme 'doom-spacegrey)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; LIGHT THEME FAVORITES ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;(setq doom-theme 'doom-nord-light)
+
 (map! :leader
       :desc "Load new theme"
       "h t" #'counsel-load-theme)
