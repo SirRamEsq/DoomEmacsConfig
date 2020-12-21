@@ -145,7 +145,7 @@ customer="insitu"
   + org agenda is like the "glue" that holds multiple project scopes together
 
 #+BEGIN_SRC emacs-lisp
-(setq xplm-customers '("insitu" "ddc" "telestream"))
+(setq xplm-customers '("xplm" "insitu" "ddc" "telestream"))
 (defun org-agenda-prop-search (property value)
   "Show TODOs that have match PROPERTY = VALUE"
   (org-tags-view t (format "%s=\"%s\"/TODO" property value)))

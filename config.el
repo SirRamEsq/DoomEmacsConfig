@@ -117,7 +117,7 @@
 (use-package! org-reverse-datetree)
   ;:hook (org-mode-hook))
 
-(setq xplm-customers '("insitu" "ddc" "telestream"))
+(setq xplm-customers '("xplm" "insitu" "ddc" "telestream"))
 (defun org-agenda-prop-search (property value)
   "Show TODOs that have match PROPERTY = VALUE"
   (org-tags-view t (format "%s=\"%s\"/TODO" property value)))
