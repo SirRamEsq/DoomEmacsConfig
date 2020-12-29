@@ -11,6 +11,9 @@
 (add-to-list 'auto-mode-alist '("\\.datamodel\\'" . ruby-mode))
 (add-to-list 'auto-mode-alist '("\\.release\\'" . ruby-mode))
 
+; Visual Basic File Associations
+(add-to-list 'auto-mode-alist '("\\.vb\\'" . visual-basic-mode))
+
 (require 'gdscript-mode)
 
 (map! :leader

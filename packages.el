@@ -56,3 +56,8 @@
           :recipe (:host github
                    :repo "GDQuest/emacs-gdscript-mode"))
 (package! org-reverse-datetree)
+
+;; https://github.com/hlissner/doom-emacs/blob/develop/docs/getting_started.org#package-management
+;; looks for ~/.doom.d/local-packages/visual-basic-mode/visual-basic-mode.el
+(package! visual-basic-mode
+          :recipe (:local-repo "local-packages/visual-basic-mode"))
