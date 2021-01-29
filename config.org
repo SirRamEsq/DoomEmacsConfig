@@ -46,28 +46,75 @@ customer="insitu"
 (setq org-journal-dir (concat org-directory "/journal"))
 
 
-; Journal
 (defun daily-name   (&optional time) (format-time-string "%Y-%m-%d [%a]" time))
 (defun weekly-name  (&optional time) (format-time-string "%Y-%m W%W" time))
 (defun monthly-name (&optional time) (format-time-string "%Y-%m" time))
+(defun year-name    (&optional time) (format-time-string "%Y" time))
+
+
+(defun days-from-now (days)
+    (let* ((final-date (decode-time)))
+         (cl-incf (nth 3 final-date) days)
+         (apply #'encode-time final-date)))
+
+; TODO sets day to first of the month so we don't blow past an enitre month with fewer days
+; ie. it's Jan 29th and next month is Feb, if we don't change the day encode-time will interperet as March
+(defun months-from-now (months)
+    (let* ((final-date (decode-time)))
+         (cl-incf (nth 4 final-date) months)
+         ; Set day to First of the month
+         (setf (nth 3 final-date) 1)
+         (apply #'encode-time final-date)))
+
+; Journal
+
 (defconst org-mode-daily-file
-    (expand-file-name (concat org-journal-dir "/" (daily-name) ".org"))
+    (expand-file-name (concat org-journal-dir "/" (year-name) "/" (daily-name) ".org"))
     "Today's org mode journal file")
 
 (defconst org-mode-weekly-file
-    (expand-file-name (concat org-journal-dir "/" (weekly-name) ".org"))
+    (expand-file-name (concat org-journal-dir "/" (year-name) "/" (weekly-name) ".org"))
     "Week's org mode journal file")
 
 (defconst org-mode-monthly-file
-    (expand-file-name (concat org-journal-dir "/" (monthly-name) ".org"))
+    (expand-file-name (concat org-journal-dir "/" (year-name) "/" (monthly-name) ".org"))
     "Month's org mode journal file")
+
+(defconst org-mode-weekly-report-file
+    (expand-file-name (concat org-journal-dir "/" (year-name) "/" (weekly-name) "_Report.org"))
+    "Month's org mode journal file")
+
+(defun org-mode-future-daily-file (days)
+    "Future Day's org mode journal file"
+    (interactive)
+    (expand-file-name (concat org-journal-dir "/" (year-name) "/"  (daily-name (days-from-now days)) ".org")))
+
+(defun org-mode-future-weekly-file (weeks)
+    "Future Week's org mode journal file"
+    (interactive)
+    (expand-file-name (concat org-journal-dir "/" (year-name) "/" (weekly-name (days-from-now (* weeks 7))) ".org")))
+
+(defun org-mode-future-monthly-file (months)
+    "Future Month's org mode journal file"
+    (interactive)
+    (expand-file-name (concat org-journal-dir "/" (year-name) "/"(monthly-name (months-from-now months)) ".org")))
 
 (map! :desc "Daily Journal"
     "M-n d" #'(lambda () (interactive) (find-file org-mode-daily-file))
     :desc "Weekly Journal"
     "M-n w" #'(lambda () (interactive) (find-file org-mode-weekly-file))
+    :desc "Weekly Report"
+    "M-n r" #'(lambda () (interactive) (find-file org-mode-weekly-report-file))
     :desc "Monthly Journal"
-    "M-n m" #'(lambda () (interactive) (find-file org-mode-monthly-file)))
+    "M-n m" #'(lambda () (interactive) (find-file org-mode-monthly-file))
+
+    :desc "Tomorrow Journal"
+    "M-n n d" #'(lambda () (interactive) (find-file (org-mode-future-daily-file 1)))
+    :desc "Next Week Journal"
+    "M-n n w" #'(lambda () (interactive) (find-file (org-mode-future-weekly-file 1)))
+    :desc "Next Month Journal"
+    "M-n n m" #'(lambda () (interactive) (find-file (org-mode-future-monthly-file 1))))
+
 
 (after! org
   (require 'org-bullets)  ; Nicer bullets in org-mode
