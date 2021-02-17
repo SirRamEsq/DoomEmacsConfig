@@ -2,8 +2,7 @@
 #+AUTHOR: Ryan Lloyd (RL)
 #+DESCRIPTION: RL's personal Doom Emacs config.
 #+PROPERTY: header-args :tangle config.el
-#+STARTUP: showeverything
-
+#+STARTUP: overview
 
 * Basic
 #+BEGIN_SRC emacs-lisp
@@ -81,7 +80,7 @@ customer="insitu"
     "Month's org mode journal file")
 
 (defconst org-mode-weekly-report-file
-    (expand-file-name (concat org-journal-dir "/" (year-name) "/" (weekly-name) "_Report.org"))
+    (expand-file-name (concat org-journal-dir "/" (year-name) "/" (weekly-name) " Report.org"))
     "Month's org mode journal file")
 
 (defun org-mode-future-daily-file (days)
@@ -407,3 +406,29 @@ Setting the theme to doom-one.  To try out new themes, I set a keybinding for co
 ; Add dash to emacs-lisp mode
 (add-hook 'emacs-lisp-mode-hook #'(lambda () (modify-syntax-entry ?- "w")))
 #+end_src
+
+* Outlook
+See Outlook.org::[[file:~/Dropbox/org-mode/tech/outlook.org::*Link to message][Link to message]]
+One gotcha with this method:
+- GUID's change when you move a message between document stores
+- If you get the GUID to the message while it's on your Exchange server and then move it to your local PST file the link will change
+- Move the message before you get the GUID.
+- Outlook links will likely only work on the machine they originate on
+
+This issue shouldn't be a very big deal. All emails are work related and will only be accessed on my work computer.
+If ever you want to change this, reconfigure Outlook to save an email as HTML in Dropbox and then use the dropbox path.
+#+BEGIN_SRC emacs-lisp
+;;; org-outlook.el - Support for links to Outlook items in Org
+;; (require 'org)
+(org-add-link-type "outlook" 'org-outlook-open)
+(defun org-outlook-open (id)
+   "Open the Outlook item identified by ID.  ID should be an Outlook GUID."
+   (w32-shell-execute "open" "C:/Outlook" (concat "/select " "outlook:" id))) ;; To use this method, outlook must exist or have a shortcut at the specified location
+   ;; To use this method, need to do a registry tweak
+   ;(w32-shell-execute "open" (concat "outlook:" id)))
+
+;(provide 'org-outlook)
+
+;;; org-outlook.el ends here
+#+END_SRC
+: org-outlook-open

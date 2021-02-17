@@ -61,7 +61,7 @@
     "Month's org mode journal file")
 
 (defconst org-mode-weekly-report-file
-    (expand-file-name (concat org-journal-dir "/" (year-name) "/" (weekly-name) "_Report.org"))
+    (expand-file-name (concat org-journal-dir "/" (year-name) "/" (weekly-name) " Report.org"))
     "Month's org mode journal file")
 
 (defun org-mode-future-daily-file (days)
@@ -305,3 +305,16 @@
 (add-hook 'gdscript-mode-hook #'(lambda () (modify-syntax-entry ?_ "w")))
 ; Add dash to emacs-lisp mode
 (add-hook 'emacs-lisp-mode-hook #'(lambda () (modify-syntax-entry ?- "w")))
+
+;;; org-outlook.el - Support for links to Outlook items in Org
+;; (require 'org)
+(org-add-link-type "outlook" 'org-outlook-open)
+(defun org-outlook-open (id)
+   "Open the Outlook item identified by ID.  ID should be an Outlook GUID."
+   (w32-shell-execute "open" "C:/Outlook" (concat "/select " "outlook:" id))) ;; To use this method, outlook must exist or have a shortcut at the specified location
+   ;; To use this method, need to do a registry tweak
+   ;(w32-shell-execute "open" (concat "outlook:" id)))
+
+;(provide 'org-outlook)
+
+;;; org-outlook.el ends here
