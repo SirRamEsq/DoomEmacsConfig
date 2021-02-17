@@ -4,6 +4,21 @@
 #+PROPERTY: header-args :tangle config.el
 #+STARTUP: overview
 
+* Dired controls cheatsheet
+https://www.youtube.com/watch?v=oZSmlAAbmYs&feature=emb_title
+- New Directory: +
+- Mark for Deletion: d
+- Delete marked: x
+- Sort: o
+- Modify file mode (Linux): M
+- Set Owner (Linux): O
+- Mark file: m
+- Invert marks: t
+- Remove marks: U
+- Rename: i (insert mode)
+- Based on dired-dwim-target (Do What I Mean)
+  + Copy from pane to next pane: C
+  + Move from pane to next pane: R
 * Basic
 #+BEGIN_SRC emacs-lisp
 
@@ -228,9 +243,7 @@ Doom Emacs uses 'SPC b' for keybindings related to bookmarks and buffers.  Bookm
       "b w" 'bookmark-save)
 #+END_SRC
 
-* APPLICATIONS
-Doom Emacs does not use 'SPC a' for any of its keybindings; All extra applications will take the format of 'SPC a + <key'
-** DIRED
+* DIRED
 Dired is the file manager within Emacs.  Below, I setup keybindings for image previews (peep-dired).
 Application Shortcut is 'SPC a d'
 
@@ -244,6 +257,46 @@ Application Shortcut is 'SPC a d'
 | (in peep-dired-mode) peep-dired-prev-file | /Move to previous file in peep-dired-mode/ | k          |
 
 #+BEGIN_SRC emacs-lisp
+(defun xah-open-in-external-app (&optional @fname)
+  "Open the current file or dired marked files in external app.
+When called in emacs lisp, if @fname is given, open that.
+URL `http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.html'
+Version 2019-11-04 2021-02-16"
+  (interactive)
+  (let* (
+         ($file-list
+          (if @fname
+              (progn (list @fname))
+            (if (string-equal major-mode "dired-mode")
+                (dired-get-marked-files)
+              (list (buffer-file-name)))))
+         ($do-it-p (if (<= (length $file-list) 5)
+                       t
+                     (y-or-n-p "Open more than 5 files? "))))
+    (when $do-it-p
+      (cond
+       ((string-equal system-type "windows-nt")
+        (mapc
+         (lambda ($fpath)
+           (shell-command (concat "PowerShell -Command \"Invoke-Item -LiteralPath\" " "'" (shell-quote-argument (expand-file-name $fpath )) "'")))
+         $file-list))
+       ((string-equal system-type "darwin")
+        (mapc
+         (lambda ($fpath)
+           (shell-command
+            (concat "open " (shell-quote-argument $fpath))))  $file-list))
+       ((string-equal system-type "gnu/linux")
+        (mapc
+         (lambda ($fpath) (let ((process-connection-type nil))
+                            (start-process "" nil "xdg-open" $fpath))) $file-list))))))
+
+
+; Dired mode mappings
+(map! :leader
+      :map dired-mode-map
+      :desc "Open in external app"
+      "m o" #'(lambda () (interactive) (xah-open-in-external-app)))
+
 (map! :leader
       :desc "Dired"
       "a d d" #'dired
