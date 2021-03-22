@@ -220,13 +220,14 @@ customer="insitu"
     ;)
   ;)
 
+; See here for more https://orgmode.org/worg/org-tutorials/advanced-searching.html
 (defun org-agenda-prop-search-interactive(key list)
   "Search for VALUE in property KEY; interactively set VALUE"
   (let ((value (completing-read (format "%s: " key) list)))
     (org-agenda-prop-search key value)))
 
 (map! :desc "Agenda View"
-      "<f12> p" #'(lambda () (interactive) (org-tags-view t "-@XPLM-@LOUIE"))
+      "<f12> p" #'(lambda () (interactive) (org-tags-view t "-@XPLM"))
       "<f12> w w" #'(lambda () (interactive) (org-tags-view t "@XPLM"))
       "<f12> w p" #'(lambda () (interactive) (org-agenda-prop-search-interactive "customer" xplm-customers)))
 
