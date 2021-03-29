@@ -34,16 +34,16 @@
 
 (defun days-from-now (days)
     (let* ((final-date (decode-time)))
-         (cl-incf (nth 3 final-date) days)
-         (apply #'encode-time final-date)))
+        (cl-incf (nth 3 final-date) days)
+        (apply #'encode-time final-date)))
 
 ; TODO sets day to first of the month so we don't blow past an enitre month with fewer days
 ; ie. it's Jan 29th and next month is Feb, if we don't change the day encode-time will interperet as March
 (defun months-from-now (months)
     (let* ((final-date (decode-time)))
-         (cl-incf (nth 4 final-date) months)
          ; Set day to First of the month
          (setf (nth 3 final-date) 1)
+         (cl-incf (nth 4 final-date) months)
          (apply #'encode-time final-date)))
 
 ; Journal
@@ -93,7 +93,14 @@
     :desc "Next Week Journal"
     "M-n n w" #'(lambda () (interactive) (find-file (org-mode-future-weekly-file 1)))
     :desc "Next Month Journal"
-    "M-n n m" #'(lambda () (interactive) (find-file (org-mode-future-monthly-file 1))))
+    "M-n n m" #'(lambda () (interactive) (find-file (org-mode-future-monthly-file 1)))
+
+    :desc "Yesterday Journal"
+    "M-n p d" #'(lambda () (interactive) (find-file (org-mode-future-daily-file -1)))
+    :desc "Prev Week Journal"
+    "M-n p w" #'(lambda () (interactive) (find-file (org-mode-future-weekly-file -1)))
+    :desc "Prev Month Journal"
+    "M-n p m" #'(lambda () (interactive) (find-file (org-mode-future-monthly-file -1))))
 
 
 (after! org
@@ -178,13 +185,14 @@
     ;)
   ;)
 
+; See here for more https://orgmode.org/worg/org-tutorials/advanced-searching.html
 (defun org-agenda-prop-search-interactive(key list)
   "Search for VALUE in property KEY; interactively set VALUE"
   (let ((value (completing-read (format "%s: " key) list)))
     (org-agenda-prop-search key value)))
 
 (map! :desc "Agenda View"
-      "<f12> p" #'(lambda () (interactive) (org-tags-view t "-@XPLM-@LOUIE"))
+      "<f12> p" #'(lambda () (interactive) (org-tags-view t "-@XPLM"))
       "<f12> w w" #'(lambda () (interactive) (org-tags-view t "@XPLM"))
       "<f12> w p" #'(lambda () (interactive) (org-agenda-prop-search-interactive "customer" xplm-customers)))
 
