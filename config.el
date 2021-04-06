@@ -366,3 +366,8 @@ Version 2019-11-04 2021-02-16"
 ;(provide 'org-outlook)
 
 ;;; org-outlook.el ends here
+
+(add-to-list 'auto-mode-alist '("\\.mermaid\\'" . mermaid-mode))
+(setq mermaid-mmdc-location "~/.doom.d/dependencies/mermaid-cli/node_modules/.bin/mmdc.cmd")
+(setq mermaid-output-format ".png")
+(setq mermaid-flags "")

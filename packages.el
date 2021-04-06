@@ -61,3 +61,5 @@
 ;; looks for ~/.doom.d/local-packages/visual-basic-mode/visual-basic-mode.el
 (package! visual-basic-mode
           :recipe (:local-repo "local-packages/visual-basic-mode"))
+
+(package! mermaid-mode)
