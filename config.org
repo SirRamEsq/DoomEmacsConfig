@@ -497,7 +497,10 @@ If ever you want to change this, reconfigure Outlook to save an email as HTML in
 * Mermaid
 #+begin_src emacs-lisp
 (add-to-list 'auto-mode-alist '("\\.mermaid\\'" . mermaid-mode))
-(setq mermaid-mmdc-location "~/.doom.d/dependencies/mermaid-cli/node_modules/.bin/mmdc.cmd")
-(setq mermaid-output-format ".png")
-(setq mermaid-flags "")
+(if (eq system-type 'windows-nt)
+    (setq mermaid-mmdc-location "~/.doom.d/dependencies/mermaid-cli/node_modules/.bin/mmdc.cmd")
+    (setq mermaid-mmdc-location "~/.doom.d/dependencies/mermaid-cli/node_modules/.bin/mmdc"))
+;(setq mermaid-output-format ".png")
+;(setq mermaid-tmp-dir "~/.doom.d/mermaid-tmp/")
+;(setq mermaid-flags "")
 #+end_src
