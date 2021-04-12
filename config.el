@@ -374,3 +374,6 @@ Version 2019-11-04 2021-02-16"
 ;(setq mermaid-output-format ".png")
 ;(setq mermaid-tmp-dir "~/.doom.d/mermaid-tmp/")
 ;(setq mermaid-flags "")
+
+(map! :desc "autoformat"
+      "<f10>" #'(lambda () (interactive) (format-all-buffer)))

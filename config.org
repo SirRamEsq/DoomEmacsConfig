@@ -504,3 +504,9 @@ If ever you want to change this, reconfigure Outlook to save an email as HTML in
 ;(setq mermaid-tmp-dir "~/.doom.d/mermaid-tmp/")
 ;(setq mermaid-flags "")
 #+end_src
+* Formatting
+Auto Formatting for languages
+#+begin_src emacs-lisp
+(map! :desc "autoformat"
+      "<f10>" #'(lambda () (interactive) (format-all-buffer)))
+#+end_src

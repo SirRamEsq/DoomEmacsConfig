@@ -63,3 +63,5 @@
           :recipe (:local-repo "local-packages/visual-basic-mode"))
 
 (package! mermaid-mode)
+
+(package! format-all)
