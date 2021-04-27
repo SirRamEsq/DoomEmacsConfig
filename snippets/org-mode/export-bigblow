@@ -3,3 +3,4 @@
 # key: ebb
 # --
 #+SETUPFILE: ~/.doom.d/web-export-setup/fniessen-org-html-themes/org/theme-bigblow.setup
+#+OPTIONS: ^:nil
