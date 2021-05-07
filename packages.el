@@ -52,9 +52,10 @@
 
 (package! org-bullets)
 (package! highlight-symbol)
-(package! gdscript-mode
-          :recipe (:host github
-                   :repo "GDQuest/emacs-gdscript-mode"))
+; For gdscript, see init.el
+;(package! gdscript-mode
+          ;:recipe (:host github
+                   ;:repo "GDQuest/emacs-gdscript-mode"))
 (package! org-reverse-datetree)
 
 ;; https://github.com/hlissner/doom-emacs/blob/develop/docs/getting_started.org#package-management
@@ -65,3 +66,4 @@
 (package! mermaid-mode)
 
 (package! format-all)
+(package! emojify)
