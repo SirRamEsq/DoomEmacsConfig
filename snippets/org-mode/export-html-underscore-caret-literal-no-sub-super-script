@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: export-html-undersore-caret-literal
+# key: ehucl
+# condition: t
+# --
+#+OPTIONS: ^:nil
