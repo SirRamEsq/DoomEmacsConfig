@@ -135,7 +135,9 @@
         org-todo-keywords        ; This overwrites the default Doom org-todo-keywords
           '((sequence
              "TODO(t)"           ; A task that is ready to be tackled
+             "NEXT(n)"           ; Task is next in line to be done
              "WAIT(w)"           ; Something is holding up this task
+             "SOMEDAY(s)"        ; Might do it eventually?
              "FUTURE(f)"         ; To be completed in the unspecified future
              "|"                 ; The pipe necessary to separate "active" states and "inactive" states
              "DONE(d)"           ; Task has been completed
@@ -191,10 +193,74 @@
   (let ((value (completing-read (format "%s: " key) list)))
     (org-agenda-prop-search key value)))
 
+;(map! :desc "Agenda View"
+      ;"<f12> p" #'(lambda () (interactive) (org-tags-view t "-@XPLM"))
+      ;"<f12> w w" #'(lambda () (interactive) (org-tags-view t "@XPLM"))
+      ;"<f12> w p" #'(lambda () (interactive) (org-agenda-prop-search-interactive "customer" xplm-customers)))
+
+; Use evil keys instead of having super-agenda overwrite
+; https://github.com/alphapapa/org-super-agenda/issues/112
+(setq org-super-agenda-header-map nil)
+(org-super-agenda-mode)
+
+(setq org-agenda-custom-commands
+      '(("p" "Personal view"
+         ((agenda "" (
+                      (org-agenda-span 'day)        ; Daily Agenda
+                      (org-deadline-warning-days 7) ; 7 day advanced warning for deadlines
+                      (org-super-agenda-groups
+                       '((:name "Today"
+                                :time-grid t
+                                :date today
+                                :todo "TODAY"
+                                :scheduled today
+                                :order 1)))))
+          (alltodo "" (
+                       (org-agenda-overriding-header "TODO-List")
+                       (org-agenda-prefix-format "[%c] 📌 ")
+                       (org-super-agenda-groups
+                        '(
+                          (:discard (:tag ("@XPLM" "Chore" "Daily")))
+                          (:name "Next to do"
+                                :todo "NEXT"
+                                :face (:background "black" :underline t)
+                                )
+                          (:name "Overdue"
+                                :face (:background "black" :underline t)
+                                :deadline past
+                                )
+                          (:name "Due Today"
+                                :face (:background "black" :underline t)
+                                :deadline today
+                                )
+                          (:name "Important"
+                                :tag "Important"
+                                :priority "A"
+                                :face (:background "black" :underline t)
+                                )
+                          (:name "Low-Hanging Fruit"
+                                :effort< "0:30"
+                                )
+                          (:name "Due future"
+                                :deadline future
+                                )
+
+                          (:name "Tasks"
+                                  :category "Tasks"
+                                  )
+                          (:name "Social"
+                                  :category "Social"
+                                  )
+                          (:name "Trivial"
+                                :priority<= "C"
+                                :tag ("TRIVIAL" "UNIMPORTANT")
+                                :todo ("SOMEDAY" )
+                                )
+                          (:auto-category t)
+                          ))))))))
+
 (map! :desc "Agenda View"
-      "<f12> p" #'(lambda () (interactive) (org-tags-view t "-@XPLM"))
-      "<f12> w w" #'(lambda () (interactive) (org-tags-view t "@XPLM"))
-      "<f12> w p" #'(lambda () (interactive) (org-agenda-prop-search-interactive "customer" xplm-customers)))
+      "<f12>" #'(lambda () (interactive) (org-agenda "p")))
 
 (map! :leader
       :desc "List bookmarks"
@@ -261,7 +327,8 @@ Version 2019-11-04 2021-02-16"
                                              (kbd "k") 'peep-dired-prev-file)
 (add-hook 'peep-dired-hook 'evil-normalize-keymaps)
 
-(setq doom-font (font-spec :family "Source Code Variable" :size 14)
+(setq
+      doom-font (font-spec :family "Source Code Variable" :size 14)
       doom-variable-pitch-font (font-spec :family "Ubuntu" :size 14)
       doom-big-font (font-spec :family "Source Code Variable" :size 24))
 (after! doom-themes

@@ -169,7 +169,9 @@ customer="insitu"
         org-todo-keywords        ; This overwrites the default Doom org-todo-keywords
           '((sequence
              "TODO(t)"           ; A task that is ready to be tackled
+             "NEXT(n)"           ; Task is next in line to be done
              "WAIT(w)"           ; Something is holding up this task
+             "SOMEDAY(s)"        ; Might do it eventually?
              "FUTURE(f)"         ; To be completed in the unspecified future
              "|"                 ; The pipe necessary to separate "active" states and "inactive" states
              "DONE(d)"           ; Task has been completed
@@ -215,6 +217,11 @@ customer="insitu"
   + This is mostly fine, as all TODOs for a project should be in their own file
   + org agenda is like the "glue" that holds multiple project scopes together
 
+- Can search by showing all TODOs
+  + then filter using org-agenda-filter-by-tag
+  + then filter using org-agenda-filter-by-category
+- Commented out to use super agenda
+
 #+BEGIN_SRC emacs-lisp
 (setq xplm-customers '("xplm" "insitu" "ddc" "telestream"))
 (defun org-agenda-prop-search (property value)
@@ -233,11 +240,81 @@ customer="insitu"
   (let ((value (completing-read (format "%s: " key) list)))
     (org-agenda-prop-search key value)))
 
-(map! :desc "Agenda View"
-      "<f12> p" #'(lambda () (interactive) (org-tags-view t "-@XPLM"))
-      "<f12> w w" #'(lambda () (interactive) (org-tags-view t "@XPLM"))
-      "<f12> w p" #'(lambda () (interactive) (org-agenda-prop-search-interactive "customer" xplm-customers)))
+;(map! :desc "Agenda View"
+      ;"<f12> p" #'(lambda () (interactive) (org-tags-view t "-@XPLM"))
+      ;"<f12> w w" #'(lambda () (interactive) (org-tags-view t "@XPLM"))
+      ;"<f12> w p" #'(lambda () (interactive) (org-agenda-prop-search-interactive "customer" xplm-customers)))
 
+#+END_SRC
+
+
+** Org super agenda
+- Commented out to use super agenda
+
+#+BEGIN_SRC emacs-lisp
+; Use evil keys instead of having super-agenda overwrite
+; https://github.com/alphapapa/org-super-agenda/issues/112
+(setq org-super-agenda-header-map nil)
+(org-super-agenda-mode)
+
+(setq org-agenda-custom-commands
+      '(("p" "Personal view"
+         ((agenda "" (
+                      (org-agenda-span 'day)        ; Daily Agenda
+                      (org-deadline-warning-days 7) ; 7 day advanced warning for deadlines
+                      (org-super-agenda-groups
+                       '((:name "Today"
+                                :time-grid t
+                                :date today
+                                :todo "TODAY"
+                                :scheduled today
+                                :order 1)))))
+          (alltodo "" (
+                       (org-agenda-overriding-header "TODO-List")
+                       (org-agenda-prefix-format "[%c] 📌 ")
+                       (org-super-agenda-groups
+                        '(
+                          (:discard (:tag ("@XPLM" "Chore" "Daily")))
+                          (:name "Next to do"
+                                :todo "NEXT"
+                                :face (:background "black" :underline t)
+                                )
+                          (:name "Overdue"
+                                :face (:background "black" :underline t)
+                                :deadline past
+                                )
+                          (:name "Due Today"
+                                :face (:background "black" :underline t)
+                                :deadline today
+                                )
+                          (:name "Important"
+                                :tag "Important"
+                                :priority "A"
+                                :face (:background "black" :underline t)
+                                )
+                          (:name "Low-Hanging Fruit"
+                                :effort< "0:30"
+                                )
+                          (:name "Due future"
+                                :deadline future
+                                )
+
+                          (:name "Tasks"
+                                  :category "Tasks"
+                                  )
+                          (:name "Social"
+                                  :category "Social"
+                                  )
+                          (:name "Trivial"
+                                :priority<= "C"
+                                :tag ("TRIVIAL" "UNIMPORTANT")
+                                :todo ("SOMEDAY" )
+                                )
+                          (:auto-category t)
+                          ))))))))
+
+(map! :desc "Agenda View"
+      "<f12>" #'(lambda () (interactive) (org-agenda "p")))
 #+END_SRC
 * BOOKMARKS AND BUFFERS
 Doom Emacs uses 'SPC b' for keybindings related to bookmarks and buffers.  Bookmarks are somewhat like registers in that they record positions you can jump to.  Unlike registers, they have long names, and they persist automatically from one Emacs session to the next. The prototypical use of bookmarks is to record where you were reading in various files.  Regarding /buffers/, the text you are editing in Emacs resides in an object called a /buffer/. Each time you visit a file, a buffer is used to hold the file’s text. Each time you invoke Dired, a buffer is used to hold the directory listing.
@@ -333,7 +410,8 @@ Settings related to fonts within Doom Emacs:
 - 'font-lock-keyword-face' -- for keywords with special significance, like ‘for’ and ‘if’ in C.
 
 #+BEGIN_SRC emacs-lisp
-(setq doom-font (font-spec :family "Source Code Variable" :size 14)
+(setq
+      doom-font (font-spec :family "Source Code Variable" :size 14)
       doom-variable-pitch-font (font-spec :family "Ubuntu" :size 14)
       doom-big-font (font-spec :family "Source Code Variable" :size 24))
 (after! doom-themes
