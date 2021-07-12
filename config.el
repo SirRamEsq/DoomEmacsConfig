@@ -221,6 +221,12 @@
                        (org-super-agenda-groups
                         '(
                           (:discard (:tag ("@XPLM" "Chore" "Daily")))
+                          (:name "Trivial"
+                                :priority<= "C"
+                                :tag ("TRIVIAL" "UNIMPORTANT")
+                                :todo ("SOMEDAY" )
+                                :order 1000
+                                )
                           (:name "Next to do"
                                 :todo "NEXT"
                                 :face (:background "black" :underline t)
@@ -251,11 +257,6 @@
                           (:name "Social"
                                   :category "Social"
                                   )
-                          (:name "Trivial"
-                                :priority<= "C"
-                                :tag ("TRIVIAL" "UNIMPORTANT")
-                                :todo ("SOMEDAY" )
-                                )
                           (:auto-category t)
                           ))))))))
 
