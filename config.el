@@ -241,7 +241,10 @@
                                 )
                           (:name "Important"
                                 :tag "Important"
-                                :priority "A"
+                                :and(
+                                    :not(:category "Social")
+                                    :priority "A"
+                                    )
                                 :face (:background "black" :underline t)
                                 )
                           (:name "Low-Hanging Fruit"
