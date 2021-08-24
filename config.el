@@ -400,6 +400,10 @@ Version 2019-11-04 2021-02-16"
 (after! yasnippet
   (setq yas--default-user-snippets-dir "~/.doom.d/snippets"))
 
+;; add extra snippet directories
+(setq yas-snippet-dirs (append yas-snippet-dirs
+                               '("~/Dropbox/emacs-snippets")))
+
 (setq company-backends
       '((company-files          ; files & directory
          company-keywords       ; keywords
