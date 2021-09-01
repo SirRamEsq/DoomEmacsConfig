@@ -108,11 +108,11 @@
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 
   (setq org-agenda-files (list
-                         (concat org-directory "/work/xplm/projects")
-                         (concat org-directory "/work/xplm/ecad")
-                         (concat org-directory "/work/xplm/ecad/customers")
+                         ;(concat org-directory "/work/xplm/projects")
+                         ;(concat org-directory "/work/xplm/ecad")
+                         ;(concat org-directory "/work/xplm/ecad/customers")
+                         ;(concat org-directory "/work/xplm/clients")
                          (concat org-directory "/agenda")
-                         (concat org-directory "/work/xplm/clients")
                          ))
 
   (setq org-default-notes-file (expand-file-name "notes.org" org-directory)
@@ -220,7 +220,7 @@
                        (org-agenda-prefix-format "[%c] 📌 ")
                        (org-super-agenda-groups
                         '(
-                          (:discard (:tag ("@XPLM" "Chore" "Daily")))
+                          (:discard (:tag ("Chore" "Daily")))
                           (:name "Trivial"
                                 :priority<= "C"
                                 :tag ("TRIVIAL" "UNIMPORTANT")
@@ -372,15 +372,15 @@ Version 2019-11-04 2021-02-16"
       "j d o o" #'(lambda () (interactive) (dired org-directory))
       :desc "org agenda"
       "j d o a" #'(lambda () (interactive) (dired (concat org-directory "/agenda")))
-      :leader
-      :desc "root work"
-      "j d w w" #'(lambda () (interactive) (dired (concat org-directory "/work/xplm")))
-      :leader
-      :desc "work ecad"
-      "j d w e" #'(lambda () (interactive) (dired (concat org-directory "/work/xplm/ecad")))
-      :leader
-      :desc "work time"
-      "j f w t" #'(lambda () (interactive) (find-file (concat org-directory "/work/xplm/time-tracking.org")))
+      ;:leader
+      ;:desc "root work"
+      ;"j d w w" #'(lambda () (interactive) (dired (concat org-directory "/work/xplm")))
+      ;:leader
+      ;:desc "work ecad"
+      ;"j d w e" #'(lambda () (interactive) (dired (concat org-directory "/work/xplm/ecad")))
+      ;:leader
+      ;:desc "work time"
+      ;"j f w t" #'(lambda () (interactive) (find-file (concat org-directory "/work/xplm/time-tracking.org")))
       :leader
       :desc "Edit todo.org"
       "j f o a" #'(lambda () (interactive) (find-file (concat org-directory "/agenda/todo.org")))
