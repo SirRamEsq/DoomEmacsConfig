@@ -19,6 +19,11 @@ https://www.youtube.com/watch?v=oZSmlAAbmYs&feature=emb_title
 - Based on dired-dwim-target (Do What I Mean)
   + Copy from pane to next pane: C
   + Move from pane to next pane: R
+* Enable debugging
+#+BEGIN_SRC emacs-lisp
+; Toggle this to enable / disable debugging on error
+(setq debug-on-error t)
+#+END_SRC
 * Basic
 #+BEGIN_SRC emacs-lisp
 
@@ -257,8 +262,13 @@ customer="insitu"
 (setq org-super-agenda-header-map nil)
 (org-super-agenda-mode)
 
+; For some dumb reason, %s is ignored in org-agenda-prefix-format
+; https://stackoverflow.com/questions/58820073/s-in-org-agenda-prefix-format-doesnt-display-dates-in-the-todo-view
+; Using a custom expression instead
+(setq org-agenda-custom-expression-scheduled '"%(let ((scheduled (org-get-scheduled-time (point)))) (if scheduled (format-time-string \"%Y-%m-%d\" scheduled) \"\")) ")
+(setq org-agenda-custom-expression-deadline '"%(let ((deadline (org-get-deadline-time (point)))) (if deadline (format-time-string \"%Y-%m-%d\" deadline) \"\")) ")
 (setq org-agenda-custom-commands
-      '(("p" "Personal view"
+      `(("p" "Personal view"
          ((agenda "" (
                       (org-agenda-span 'day)        ; Daily Agenda
                       (org-deadline-warning-days 7) ; 7 day advanced warning for deadlines
@@ -267,53 +277,53 @@ customer="insitu"
                                 :time-grid t
                                 :date today
                                 :todo "TODAY"
-                                :scheduled today
+                                :or (
+                                  :scheduled (before ,(format-time-string "%Y-%m-%d %a" (days-from-now 1)))
+                                  :deadline (before ,(format-time-string "%Y-%m-%d %a" (days-from-now 1)))
+                                )
                                 :order 1)))))
           (alltodo "" (
                        (org-agenda-overriding-header "TODO-List")
-                       (org-agenda-prefix-format "[%c] 📌 ")
+                       (org-agenda-prefix-format (concat "📌 [%c] " org-agenda-custom-expression-scheduled " " org-agenda-custom-expression-deadline " "))
+                       ;(org-agenda-prefix-format "📌 [%c] ")
                        (org-super-agenda-groups
-                        '(
+                        ; BACKTICK, not single quote
+                        ; if single quote is used, cannot use back quote to eval list expressions
+                        `(
                           (:discard (:tag ("Chore" "Daily")))
                           (:name "Trivial"
                                 :priority<= "C"
                                 :tag ("TRIVIAL" "UNIMPORTANT")
                                 :todo ("SOMEDAY" )
-                                :order 1000
-                                )
+                                :order 1000)
                           (:name "Next to do"
                                 :todo "NEXT"
-                                :face (:background "black" :underline t)
-                                )
+                                :face (:background "black" :underline t))
                           (:name "Overdue"
                                 :face (:background "black" :underline t)
-                                :deadline past
-                                )
+                                :deadline past)
                           (:name "Due Today"
                                 :face (:background "black" :underline t)
-                                :deadline today
-                                )
+                                :deadline today)
                           (:name "Important"
                                 :tag "Important"
                                 :and(
                                     :not(:category "Social")
                                     :priority "A"
                                     )
-                                :face (:background "black" :underline t)
-                                )
+                                :face (:background "black" :underline t))
                           (:name "Low-Hanging Fruit"
-                                :effort< "0:30"
-                                )
-                          (:name "Due future"
-                                :deadline future
-                                )
-
+                                :effort< "0:30")
+                          (:name "Due Soon"
+                                ; Use comma (backquote) to force eval
+                                :deadline (before ,(format-time-string "%Y-%m-%d %a" (days-from-now 21))))
+                          (:name "Scheduled soon"
+                                ; Use comma (backquote) to force eval
+                                :scheduled (before ,(format-time-string "%Y-%m-%d %a" (days-from-now 21))))
                           (:name "Tasks"
-                                  :category "Tasks"
-                                  )
+                                  :category "Tasks")
                           (:name "Social"
-                                  :category "Social"
-                                  )
+                                  :category "Social")
                           (:auto-category t)
                           ))))))))
 
