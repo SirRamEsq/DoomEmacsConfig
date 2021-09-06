@@ -22,7 +22,8 @@ https://www.youtube.com/watch?v=oZSmlAAbmYs&feature=emb_title
 * Enable debugging
 #+BEGIN_SRC emacs-lisp
 ; Toggle this to enable / disable debugging on error
-(setq debug-on-error t)
+; (setq debug-on-error t)
+(setq debug-on-error nil)
 #+END_SRC
 * Basic
 #+BEGIN_SRC emacs-lisp

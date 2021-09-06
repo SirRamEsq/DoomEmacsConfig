@@ -1,5 +1,6 @@
 ; Toggle this to enable / disable debugging on error
-(setq debug-on-error t)
+; (setq debug-on-error t)
+(setq debug-on-error nil)
 
 ;; Some functionality uses this to identify you, e.g. GPG configuration, email
 ;; clients, file templates and snippets.
