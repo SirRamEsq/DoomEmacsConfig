@@ -381,9 +381,9 @@ Version 2019-11-04 2021-02-16"
       "j d o o" #'(lambda () (interactive) (dired org-directory))
       :desc "org agenda"
       "j d o a" #'(lambda () (interactive) (dired (concat org-directory "/agenda")))
-      ;:leader
-      ;:desc "root work"
-      ;"j d w w" #'(lambda () (interactive) (dired (concat org-directory "/work/xplm")))
+      :leader
+      :desc "root work"
+      "j d w w" #'(lambda () (interactive) (dired (concat org-directory "/work/grafixSolutions")))
       ;:leader
       ;:desc "work ecad"
       ;"j d w e" #'(lambda () (interactive) (dired (concat org-directory "/work/xplm/ecad")))
