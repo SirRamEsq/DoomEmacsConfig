@@ -213,7 +213,7 @@
 (setq org-agenda-custom-expression-scheduled '"%(let ((scheduled (org-get-scheduled-time (point)))) (if scheduled (format-time-string \"%Y-%m-%d\" scheduled) \"\")) ")
 (setq org-agenda-custom-expression-deadline '"%(let ((deadline (org-get-deadline-time (point)))) (if deadline (format-time-string \"%Y-%m-%d\" deadline) \"\")) ")
 (setq org-agenda-custom-commands
-      `(("p" "Personal view"
+      `(("P" "Personal view Everything"
          ((agenda "" (
                       (org-agenda-span 'day)        ; Daily Agenda
                       (org-deadline-warning-days 7) ; 7 day advanced warning for deadlines
@@ -228,7 +228,7 @@
                                 )
                                 :order 1)))))
           (alltodo "" (
-                       (org-agenda-overriding-header "TODO-List")
+                       (org-agenda-overriding-header "Everything TODO-List")
                        (org-agenda-prefix-format (concat "📌 [%c] " org-agenda-custom-expression-scheduled " " org-agenda-custom-expression-deadline " "))
                        ;(org-agenda-prefix-format "📌 [%c] ")
                        (org-super-agenda-groups
@@ -270,6 +270,40 @@
                           (:name "Social"
                                   :category "Social")
                           (:auto-category t)
+                          ))))))
+
+      ("p" "Personal view"
+          ((alltodo "" (
+                       (org-agenda-overriding-header "TODO-List")
+                       (org-agenda-prefix-format (concat "📌 [%c] " org-agenda-custom-expression-scheduled " " org-agenda-custom-expression-deadline " "))
+                       ;(org-agenda-prefix-format "📌 [%c] ")
+                       (org-super-agenda-groups
+                        ; BACKTICK, not single quote
+                        ; if single quote is used, cannot use back quote to eval list expressions
+                        `(
+                          (:discard (:tag ("Chore" "Daily")))
+                          (:name "Trivial"
+                                :priority<= "C"
+                                :tag ("TRIVIAL" "UNIMPORTANT")
+                                :todo ("SOMEDAY" )
+                                :order 1000)
+                          (:name "Next to do"
+                                :todo "NEXT"
+                                :face (:background "black" :underline t))
+                          (:name "Important"
+                                :tag "Important"
+                                :and(
+                                    :not(:category "Social")
+                                    :priority "A"
+                                    )
+                                :face (:background "black" :underline t))
+                          (:name "Low-Hanging Fruit"
+                                :effort< "0:30")
+                          (:name "Tasks"
+                                  :category "Tasks")
+                          ;(:name "Social"
+                                  ;:category "Social")
+                          (:discard (:anything))
                           ))))))))
 
 (map! :desc "Agenda View"
@@ -358,13 +392,15 @@ Version 2019-11-04 2021-02-16"
 ;; (setq doom-theme 'doom-gruvbox)
 ;; (setq doom-theme 'doom-horizon)
 ;; (setq doom-theme 'doom-molokai)
-(setq doom-theme 'doom-oceanic-next)
+;; (setq doom-theme 'doom-oceanic-next)
 ;; (setq doom-theme 'doom-tomorrow-night)
+(setq doom-theme 'doom-badger)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; MID-LIGHT THEME FAVORITES ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; (setq doom-theme 'doom-nova)
+;;(setq doom-theme 'doom-nord)
 ;; (setq doom-theme 'doom-spacegrey)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -380,7 +416,7 @@ Version 2019-11-04 2021-02-16"
       :desc "root org"
       "j d o o" #'(lambda () (interactive) (dired org-directory))
       :desc "org agenda"
-      "j d o a" #'(lambda () (interactive) (dired (concat org-directory "/agenda")))
+      "j d a" #'(lambda () (interactive) (dired (concat org-directory "/agenda")))
       :leader
       :desc "root work"
       "j d w w" #'(lambda () (interactive) (dired (concat org-directory "/work/grafixSolutions")))
@@ -392,7 +428,7 @@ Version 2019-11-04 2021-02-16"
       ;"j f w t" #'(lambda () (interactive) (find-file (concat org-directory "/work/xplm/time-tracking.org")))
       :leader
       :desc "Edit todo.org"
-      "j f o a" #'(lambda () (interactive) (find-file (concat org-directory "/agenda/todo.org")))
+      "j f a" #'(lambda () (interactive) (find-file (concat org-directory "/agenda/todo.org")))
       :leader
       :desc "Edit doom config.org"
       "j f c" #'(lambda () (interactive) (find-file "~/.doom.d/config.org"))
