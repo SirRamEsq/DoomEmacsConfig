@@ -141,12 +141,16 @@
              "TODO(t)"           ; A task that is ready to be tackled
              "NEXT(n)"           ; Task is next in line to be done
              "WAIT(w)"           ; Something is holding up this task
+             "TEST(T)"           ; Might be done, but needs tested
              "SOMEDAY(s)"        ; Might do it eventually?
              "FUTURE(f)"         ; To be completed in the unspecified future
              "|"                 ; The pipe necessary to separate "active" states and "inactive" states
              "DONE(d)"           ; Task has been completed
              "DELEGATED(z)"      ; Task is someone else's responsibility
              "CANCELLED(c)" )))) ; Task has been cancelled
+
+(setq org-todo-keyword-faces
+  (quote (("TEST" :foreground "cyan" :weight bold))))
 
 ;; Date Tree
 ;(setq-default org-reverse-datetree-level-formats
@@ -419,13 +423,13 @@ Version 2019-11-04 2021-02-16"
       "j d a" #'(lambda () (interactive) (dired (concat org-directory "/agenda")))
       :leader
       :desc "root work"
-      "j d w w" #'(lambda () (interactive) (dired (concat org-directory "/work/grafixSolutions")))
+      "j d w w" #'(lambda () (interactive) (dired (concat org-directory "/work/xplm")))
       ;:leader
       ;:desc "work ecad"
       ;"j d w e" #'(lambda () (interactive) (dired (concat org-directory "/work/xplm/ecad")))
       ;:leader
       ;:desc "work time"
-      ;"j f w t" #'(lambda () (interactive) (find-file (concat org-directory "/work/xplm/time-tracking.org")))
+      "j f w t" #'(lambda () (interactive) (find-file (concat org-directory "/work/xplm/time-tracking.org")))
       :leader
       :desc "Edit todo.org"
       "j f a" #'(lambda () (interactive) (find-file (concat org-directory "/agenda/todo.org")))
