@@ -149,8 +149,19 @@
              "DELEGATED(z)"      ; Task is someone else's responsibility
              "CANCELLED(c)" )))) ; Task has been cancelled
 
-(setq org-todo-keyword-faces
-  (quote (("TEST" :foreground "cyan" :weight bold))))
+; Helpful example code
+; https://github.com/kandread/doom-emacs-private/blob/master/%2Bgtd.el
+(after! org
+    (setq org-todo-keyword-faces
+        (quote (("TODO" :foreground "#dd7777" :weight bold)
+                ("NEXT" :foreground "yellow" :weight bold)
+                ("WAIT" :foreground "yellow" :weight bold)
+                ("TEST" :foreground "cyan" :weight bold)
+                ("SOMEDAY" :foreground "purple" :weight bold)
+                ("FUTURE" :foreground "purple" :weight bold)
+                ("DONE" :foreground "green" :weight bold)
+                ("DELEGATED" :foreground "green" :weight bold)
+                ("CANCELLED" :foreground "green" :weight bold)))))
 
 ;; Date Tree
 ;(setq-default org-reverse-datetree-level-formats
@@ -453,8 +464,12 @@ Version 2019-11-04 2021-02-16"
 (setq yas-snippet-dirs (append yas-snippet-dirs
                                '("~/Dropbox/emacs-snippets")))
 
-(define-key yas-keymap (kbd "M-j") 'yas-next-field-or-maybe-expand)
-(define-key yas-keymap (kbd "M-k") 'yas-prev-field)
+(map! :map yas-keymap
+      :desc "Next field"
+      "M-j" 'yas-next-field-or-maybe-expand)
+(map! :map yas-keymap
+      :desc "Prev field"
+      "M-k" 'yas-prev-field)
 
 (setq company-backends
       '((company-files          ; files & directory
