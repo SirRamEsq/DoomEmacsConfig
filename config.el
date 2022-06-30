@@ -453,6 +453,9 @@ Version 2019-11-04 2021-02-16"
 (setq yas-snippet-dirs (append yas-snippet-dirs
                                '("~/Dropbox/emacs-snippets")))
 
+(define-key yas-keymap (kbd "M-j") 'yas-next-field-or-maybe-expand)
+(define-key yas-keymap (kbd "M-k") 'yas-prev-field)
+
 (setq company-backends
       '((company-files          ; files & directory
          company-keywords       ; keywords

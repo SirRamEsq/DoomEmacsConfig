@@ -570,6 +570,9 @@ Setting the theme to doom-one.  To try out new themes, I set a keybinding for co
 ;; add extra snippet directories
 (setq yas-snippet-dirs (append yas-snippet-dirs
                                '("~/Dropbox/emacs-snippets")))
+
+(define-key yas-keymap (kbd "M-j") 'yas-next-field-or-maybe-expand)
+(define-key yas-keymap (kbd "M-k") 'yas-prev-field)
 #+end_src
 
 * Company
