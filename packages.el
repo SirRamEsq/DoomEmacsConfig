@@ -50,6 +50,7 @@
 ;(unpin! t)
 
 
+(package! ahk-mode)
 (package! org-bullets)
 (package! highlight-symbol)
 ; For gdscript, see init.el

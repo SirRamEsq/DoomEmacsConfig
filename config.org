@@ -623,7 +623,8 @@ Setting the theme to doom-one.  To try out new themes, I set a keybinding for co
 #+end_src
 
 * Outlook
-See Outlook.org::[[file:~/Dropbox/org-mode/tech/outlook.org::*Link to message][Link to message]]
+See this link
+https://superuser.com/a/100084
 One gotcha with this method:
 - GUID's change when you move a message between document stores
 - If you get the GUID to the message while it's on your Exchange server and then move it to your local PST file the link will change
