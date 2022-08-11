@@ -525,21 +525,22 @@ Setting the theme to doom-one.  To try out new themes, I set a keybinding for co
 'f' for 'File'
 'd' for 'Dir'
 
-| FILE                             | DESCRIPTION             | KEYBINDING  |
-|----------------------------------+-------------------------+-------------|
-| <ORG_DIR>/agenda/todo.org        | Org Agenda Main file    | SPC j f a   |
-| ~/.doom.d/config.org             | /Edit doom config.org/  | SPC j f c   |
-| ~/.doom.d/aliases                | /Edit eshell aliases/   | SPC j f e   |
-| ~/.doom.d/init.el                | /Edit doom init.el/     | SPC j f i   |
-| ~/.doom.d/packages.el            | /Edit doom packages.el/ | SPC j f p   |
-| <ORG_DIR>/work/time-tracking.org | Work Time Tracking      | SPC j f w t |
+| FILE                             | DESCRIPTION                | KEYBINDING  |
+|----------------------------------+----------------------------+-------------|
+| <ORG_DIR>/agenda/todo.org        | Org Agenda Main file       | SPC j f a   |
+| ~/.doom.d/config.org             | /Edit doom config.org/     | SPC j f c   |
+| ~/.doom.d/aliases                | /Edit eshell aliases/      | SPC j f e   |
+| ~/.doom.d/init.el                | /Edit doom init.el/        | SPC j f i   |
+| ~/.doom.d/packages.el            | /Edit doom packages.el/    | SPC j f p   |
+| <ORG_DIR>/work/time-tracking.org | Work Time Tracking         | SPC j f w t |
+| <ORG_DIR>/work                   | root work org landing page | SPC j f w w |
 
 
-| DIR                 | DESCRIPTION         | KEYBINDING  |
-|---------------------+---------------------+-------------|
-| <ORG_DIR>           | /root org dir/      | SPC j d o o |
-| <ORG_DIR>/agenda    | org agenda dir      | SPC j d a   |
-| <ORG_DIR>/work      | /root work org dir/ | SPC j d w w |
+| DIR              | DESCRIPTION                | KEYBINDING  |
+|------------------+----------------------------+-------------|
+| <ORG_DIR>        | /root org dir/             | SPC j d o o |
+| <ORG_DIR>/agenda | org agenda dir             | SPC j d a   |
+| <ORG_DIR>/work   | /root work org dir/        | SPC j d w w |
 
 #+BEGIN_SRC emacs-lisp
 (map! :leader
@@ -553,9 +554,12 @@ Setting the theme to doom-one.  To try out new themes, I set a keybinding for co
       ;:leader
       ;:desc "work ecad"
       ;"j d w e" #'(lambda () (interactive) (dired (concat org-directory "/work/xplm/ecad")))
-      ;:leader
-      ;:desc "work time"
+      :leader
+      :desc "work time"
       "j f w t" #'(lambda () (interactive) (find-file (concat org-directory "/work/xplm/time-tracking.org")))
+      :leader
+      :desc "root work"
+      "j f w w" #'(lambda () (interactive) (find-file (concat org-directory "/work/xplm/xplm.org")))
       :leader
       :desc "Edit todo.org"
       "j f a" #'(lambda () (interactive) (find-file (concat org-directory "/agenda/todo.org")))

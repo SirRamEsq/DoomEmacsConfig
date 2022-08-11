@@ -438,9 +438,12 @@ Version 2019-11-04 2021-02-16"
       ;:leader
       ;:desc "work ecad"
       ;"j d w e" #'(lambda () (interactive) (dired (concat org-directory "/work/xplm/ecad")))
-      ;:leader
-      ;:desc "work time"
+      :leader
+      :desc "work time"
       "j f w t" #'(lambda () (interactive) (find-file (concat org-directory "/work/xplm/time-tracking.org")))
+      :leader
+      :desc "root work"
+      "j f w w" #'(lambda () (interactive) (find-file (concat org-directory "/work/xplm/xplm.org")))
       :leader
       :desc "Edit todo.org"
       "j f a" #'(lambda () (interactive) (find-file (concat org-directory "/agenda/todo.org")))
