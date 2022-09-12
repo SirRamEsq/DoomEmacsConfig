@@ -1,0 +1,12 @@
+# -*- mode: org; -*-
+#+SETUPFILE: https://fniessen.github.io/org-html-themes/org/theme-readtheorg.setup
+#+OPTIONS: ^:nil
+
+#+COMMENT: Customizations
+#+HTML_HEAD: <style>.outline-2 h2{background:#2980B9;color:white;font-size:175%}</style>
+#+HTML_HEAD: <style>.section-number-2{border-left: 4px solid #343131;padding-left:8px;padding-right:8px;}</style>
+
+#+COMMENT: Unset body width limit of ReadTheOrg
+#+HTML_HEAD: <style> #content{max-width:1800px;}</style>
+#+HTML_HEAD: <style> p{max-width:800px;}</style>
+#+HTML_HEAD: <style> li{max-width:800px;}</style

@@ -2,5 +2,6 @@
 # name: export-bigblow
 # key: ebb
 # --
-#+SETUPFILE: ~/.doom.d/web-export-setup/fniessen-org-html-themes/org/theme-bigblow.setup
+#+SETUPFILE: ~/.doom.d/web-export-setup/fniessen-org-html-themes/bigblow.setup
+#+HTML_HEAD: <style>#minitoc a {display: block;}</style>
 #+OPTIONS: ^:nil
