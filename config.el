@@ -522,3 +522,30 @@ Version 2019-11-04 2021-02-16"
 
 (map! :desc "autoformat"
       "<f10>" #'(lambda () (interactive) (format-all-buffer)))
+
+(obsidian-specify-path "~/ObsidianVault")
+;; If you want a different directory of `obsidian-capture':
+(setq obsidian-inbox-directory "Inbox")
+
+;; Replace standard command with Obsidian.el's in obsidian vault:
+;(bind-key (kbd "C-c C-o") 'obsidian-follow-link-at-point 'obsidian-mode-map)
+(map! :leader
+      :desc "Follow Link"
+      :map obsidian-mode-map
+      "o o" #'obsidian-follow-link-at-point)
+
+;; Use either `obsidian-insert-wikilink' or `obsidian-insert-link':
+(map! :leader
+      :desc "Insert Link"
+      :map obsidian-mode-map
+      "o l" #'obsidian-insert-link)
+
+(map! :leader
+      :map obsidian-mode-map
+      "o j" #'obsidian-jump)
+(map! :leader
+      :map obsidian-mode-map
+      "o c" #'obsidian-capture)
+
+;; Activate detectino of Obsidian vault
+(global-obsidian-mode t)

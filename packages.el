@@ -72,3 +72,5 @@
 ;; User interface package that was separated from the main Magit package
 (package! magit-section)
 (package! org-super-agenda)
+
+(package! obsidian)
