@@ -64,10 +64,11 @@ customer="insitu"
 ;; change `org-directory'. It must be set before org loads!
 (setq org-directory "~/Dropbox/org-mode")
 (setq org-journal-dir (concat org-directory "/journal"))
+(setq obsidian-journal-dir (concat "~/Dropbox/Dropsyncfiles/ObsidianVault/V1/Journal"))
 
 
-(defun daily-name   (&optional time) (format-time-string "%Y-%m-%d [%a]" time))
-(defun weekly-name  (&optional time) (format-time-string "%Y-%m W%W" time))
+(defun daily-name   (&optional time) (format-time-string "%Y-%m-%d (%a)" time))
+(defun weekly-name  (&optional time) (format-time-string "%Y-W%V" time))
 (defun monthly-name (&optional time) (format-time-string "%Y-%m" time))
 (defun year-name    (&optional time) (format-time-string "%Y" time))
 
@@ -119,28 +120,37 @@ customer="insitu"
     (interactive)
     (expand-file-name (concat org-journal-dir "/" (year-name) "/"(monthly-name (months-from-now months)) ".org")))
 
-(map! :desc "Daily Journal"
-    "M-n d" #'(lambda () (interactive) (find-file org-mode-daily-file))
-    :desc "Weekly Journal"
-    "M-n w" #'(lambda () (interactive) (find-file org-mode-weekly-file))
-    :desc "Weekly Report"
-    "M-n r" #'(lambda () (interactive) (find-file org-mode-weekly-report-file))
-    :desc "Monthly Journal"
-    "M-n m" #'(lambda () (interactive) (find-file org-mode-monthly-file))
+(defconst obsidian-mode-daily-file
+    (expand-file-name (concat obsidian-journal-dir "/" (year-name) "/" (daily-name) ".md"))
+    "Today's obsidian mode journal file")
 
-    :desc "Tomorrow Journal"
-    "M-n n d" #'(lambda () (interactive) (find-file (org-mode-future-daily-file 1)))
-    :desc "Next Week Journal"
-    "M-n n w" #'(lambda () (interactive) (find-file (org-mode-future-weekly-file 1)))
-    :desc "Next Month Journal"
-    "M-n n m" #'(lambda () (interactive) (find-file (org-mode-future-monthly-file 1)))
+(defconst obsidian-mode-weekly-file
+    (expand-file-name (concat obsidian-journal-dir "/" (year-name) "/" (weekly-name) ".md"))
+    "Week's obsidian mode journal file")
 
-    :desc "Yesterday Journal"
-    "M-n p d" #'(lambda () (interactive) (find-file (org-mode-future-daily-file -1)))
-    :desc "Prev Week Journal"
-    "M-n p w" #'(lambda () (interactive) (find-file (org-mode-future-weekly-file -1)))
-    :desc "Prev Month Journal"
-    "M-n p m" #'(lambda () (interactive) (find-file (org-mode-future-monthly-file -1))))
+(defconst obsidian-mode-monthly-file
+    (expand-file-name (concat obsidian-journal-dir "/" (year-name) "/" (monthly-name) ".md"))
+    "Month's obsidian mode journal file")
+
+(defconst obsidian-mode-weekly-report-file
+    (expand-file-name (concat obsidian-journal-dir "/" (year-name) "/" (weekly-name) " Report.md"))
+    "Month's obsidian mode journal file")
+
+(defun obsidian-mode-future-daily-file (days)
+    "Future Day's obsidian mode journal file"
+    (interactive)
+    (expand-file-name (concat obsidian-journal-dir "/" (year-name) "/"  (daily-name (days-from-now days)) ".md")))
+
+(defun obsidian-mode-future-weekly-file (weeks)
+    "Future Week's obsidian mode journal file"
+    (interactive)
+    (expand-file-name (concat obsidian-journal-dir "/" (year-name) "/" (weekly-name (days-from-now (* weeks 7))) ".md")))
+
+(defun obsidian-mode-future-monthly-file (months)
+    "Future Month's obsidian mode journal file"
+    (interactive)
+    (expand-file-name (concat obsidian-journal-dir "/" (year-name) "/"(monthly-name (months-from-now months)) ".md")))
+
 
 
 (after! org
@@ -572,9 +582,40 @@ Setting the theme to doom-one.  To try out new themes, I set a keybinding for co
       :leader
       :desc "Edit doom init.el"
       "j f i" #'(lambda () (interactive) (find-file "~/.doom.d/init.el"))
+
+; Journal
       :leader
-      :desc "Edit doom packages.el"
-      "j f p" #'(lambda () (interactive) (find-file "~/.doom.d/packages.el")))
+      :desc "Daily Journal"
+      "j f d" #'(lambda () (interactive) (find-file obsidian-mode-daily-file))
+      :leader
+      :desc "Weekly Journal"
+      "j f w" #'(lambda () (interactive) (find-file obsidian-mode-weekly-file))
+      :leader
+      :desc "Weekly Report"
+      "j f r" #'(lambda () (interactive) (find-file obsidian-mode-weekly-report-file))
+      :leader
+      :desc "Monthly Journal"
+      "j f m" #'(lambda () (interactive) (find-file obsidian-mode-monthly-file))
+
+      :leader
+      :desc "Tomorrow Journal"
+      "j f n d" #'(lambda () (interactive) (find-file (obsidian-mode-future-daily-file 1)))
+      :leader
+      :desc "Next Week Journal"
+      "j f n w" #'(lambda () (interactive) (find-file (obsidian-mode-future-weekly-file 1)))
+      :leader
+      :desc "Next Month Journal"
+      "j f n m" #'(lambda () (interactive) (find-file (obsidian-mode-future-monthly-file 1)))
+
+      :leader
+      :desc "Yesterday Journal"
+      "j f p d" #'(lambda () (interactive) (find-file (obsidian-mode-future-daily-file -1)))
+      :leader
+      :desc "Prev Week Journal"
+      "j f p w" #'(lambda () (interactive) (find-file (obsidian-mode-future-weekly-file -1)))
+      :leader
+      :desc "Prev Month Journal"
+      "j f p m" #'(lambda () (interactive) (find-file (obsidian-mode-future-monthly-file -1))))
 #+END_SRC
 
 * YAS
@@ -672,7 +713,7 @@ Auto Formatting for languages
 
 * Obsidian
 #+BEGIN_SRC emacs-lisp
-(obsidian-specify-path "~/ObsidianVault")
+(obsidian-specify-path "~/Dropbox/DropsyncFiles/ObsidianVault/V1")
 ;; If you want a different directory of `obsidian-capture':
 (setq obsidian-inbox-directory "Inbox")
 
@@ -691,7 +732,7 @@ Auto Formatting for languages
 
 (map! :leader
       :map obsidian-mode-map
-      "o j" #'obsidian-jump)
+      "j o" #'obsidian-jump)
 (map! :leader
       :map obsidian-mode-map
       "o c" #'obsidian-capture)
