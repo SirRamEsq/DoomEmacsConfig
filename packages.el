@@ -74,3 +74,6 @@
 (package! org-super-agenda)
 
 (package! obsidian)
+
+;; Package to edit .scad files for OpenSCAD
+(package! scad-mode)

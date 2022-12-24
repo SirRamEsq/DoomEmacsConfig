@@ -43,7 +43,8 @@
     (cons 320 "#b899a5")
     (cons 340 "#C0C5CE")
     (cons 360 "#C0C5CE")))
- '(vc-annotate-very-old-color nil))
+ '(vc-annotate-very-old-color nil)
+ '(warning-suppress-types '(((flycheck syntax-checker)) (defvaralias))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
