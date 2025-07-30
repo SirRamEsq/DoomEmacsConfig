@@ -1,1 +1,1 @@
-~/.emacs.d/bin/doom sync
+~/.emacs.d/bin/doom.ps1 sync

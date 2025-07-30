@@ -10,11 +10,6 @@
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type t)
 
-; XPLM ECAD File Associations
-(add-to-list 'auto-mode-alist '("\\.classification\\'" . ruby-mode))
-(add-to-list 'auto-mode-alist '("\\.datamodel\\'" . ruby-mode))
-(add-to-list 'auto-mode-alist '("\\.release\\'" . ruby-mode))
-
 ; Visual Basic File Associations
 (add-to-list 'auto-mode-alist '("\\.vb\\'" . visual-basic-mode))
 
@@ -28,7 +23,6 @@
 ;; change `org-directory'. It must be set before org loads!
 (setq org-directory "~/Dropbox/org-mode")
 (setq org-journal-dir (concat org-directory "/journal"))
-(setq obsidian-journal-dir (concat "~/Dropbox/Dropsyncfiles/ObsidianVault/V1/Journal"))
 
 
 (defun daily-name   (&optional time) (format-time-string "%Y-%m-%d (%a)" time))
@@ -83,39 +77,6 @@
     "Future Month's org mode journal file"
     (interactive)
     (expand-file-name (concat org-journal-dir "/" (year-name) "/"(monthly-name (months-from-now months)) ".org")))
-
-(defconst obsidian-mode-daily-file
-    (expand-file-name (concat obsidian-journal-dir "/" (year-name) "/" (daily-name) ".md"))
-    "Today's obsidian mode journal file")
-
-(defconst obsidian-mode-weekly-file
-    (expand-file-name (concat obsidian-journal-dir "/" (year-name) "/" (weekly-name) ".md"))
-    "Week's obsidian mode journal file")
-
-(defconst obsidian-mode-monthly-file
-    (expand-file-name (concat obsidian-journal-dir "/" (year-name) "/" (monthly-name) ".md"))
-    "Month's obsidian mode journal file")
-
-(defconst obsidian-mode-weekly-report-file
-    (expand-file-name (concat obsidian-journal-dir "/" (year-name) "/" (weekly-name) " Report.md"))
-    "Month's obsidian mode journal file")
-
-(defun obsidian-mode-future-daily-file (days)
-    "Future Day's obsidian mode journal file"
-    (interactive)
-    (expand-file-name (concat obsidian-journal-dir "/" (year-name) "/"  (daily-name (days-from-now days)) ".md")))
-
-(defun obsidian-mode-future-weekly-file (weeks)
-    "Future Week's obsidian mode journal file"
-    (interactive)
-    (expand-file-name (concat obsidian-journal-dir "/" (year-name) "/" (weekly-name (days-from-now (* weeks 7))) ".md")))
-
-(defun obsidian-mode-future-monthly-file (months)
-    "Future Month's obsidian mode journal file"
-    (interactive)
-    (expand-file-name (concat obsidian-journal-dir "/" (year-name) "/"(monthly-name (months-from-now months)) ".md")))
-
-
 
 (after! org
   (require 'org-bullets)  ; Nicer bullets in org-mode
@@ -195,10 +156,10 @@
 
 (setq org-archive-default-command 'custom-archive-command)
 
-(map! :leader
-      :map org-mode-map
-      :desc "Archive"
-      "m A" #'(lambda () (interactive) (org-archive-subtree-default)))
+;(map! :leader
+      ;:map org-mode-map
+      ;:desc "Archive"
+      ;"m A" #'(lambda () (interactive) (org-archive-subtree-default)))
 
 ; Ensure Package is loaded after org
 ; Will also immediately load org on startup without additional args
@@ -227,112 +188,112 @@
       ;"<f12> w w" #'(lambda () (interactive) (org-tags-view t "@XPLM"))
       ;"<f12> w p" #'(lambda () (interactive) (org-agenda-prop-search-interactive "customer" xplm-customers)))
 
-; Use evil keys instead of having super-agenda overwrite
-; https://github.com/alphapapa/org-super-agenda/issues/112
-(setq org-super-agenda-header-map nil)
-(org-super-agenda-mode)
-
-; For some dumb reason, %s is ignored in org-agenda-prefix-format
-; https://stackoverflow.com/questions/58820073/s-in-org-agenda-prefix-format-doesnt-display-dates-in-the-todo-view
-; Using a custom expression instead
-(setq org-agenda-custom-expression-scheduled '"%(let ((scheduled (org-get-scheduled-time (point)))) (if scheduled (format-time-string \"%Y-%m-%d\" scheduled) \"\")) ")
-(setq org-agenda-custom-expression-deadline '"%(let ((deadline (org-get-deadline-time (point)))) (if deadline (format-time-string \"%Y-%m-%d\" deadline) \"\")) ")
-(setq org-agenda-custom-commands
-      `(("P" "Personal view Everything"
-         ((agenda "" (
-                      (org-agenda-span 'day)        ; Daily Agenda
-                      (org-deadline-warning-days 7) ; 7 day advanced warning for deadlines
-                      (org-super-agenda-groups
-                       '((:name "Today"
-                                :time-grid t
-                                :date today
-                                :todo "TODAY"
-                                :or (
-                                  :scheduled (before ,(format-time-string "%Y-%m-%d %a" (days-from-now 1)))
-                                  :deadline (before ,(format-time-string "%Y-%m-%d %a" (days-from-now 1)))
-                                )
-                                :order 1)))))
-          (alltodo "" (
-                       (org-agenda-overriding-header "Everything TODO-List")
-                       (org-agenda-prefix-format (concat "📌 [%c] " org-agenda-custom-expression-scheduled " " org-agenda-custom-expression-deadline " "))
-                       ;(org-agenda-prefix-format "📌 [%c] ")
-                       (org-super-agenda-groups
-                        ; BACKTICK, not single quote
-                        ; if single quote is used, cannot use back quote to eval list expressions
-                        `(
-                          (:discard (:tag ("Chore" "Daily")))
-                          (:name "Trivial"
-                                :priority<= "C"
-                                :tag ("TRIVIAL" "UNIMPORTANT")
-                                :todo ("SOMEDAY" )
-                                :order 1000)
-                          (:name "Next to do"
-                                :todo "NEXT"
-                                :face (:background "black" :underline t))
-                          (:name "Overdue"
-                                :face (:background "black" :underline t)
-                                :deadline past)
-                          (:name "Due Today"
-                                :face (:background "black" :underline t)
-                                :deadline today)
-                          (:name "Important"
-                                :tag "Important"
-                                :and(
-                                    :not(:category "Social")
-                                    :priority "A"
-                                    )
-                                :face (:background "black" :underline t))
-                          (:name "Low-Hanging Fruit"
-                                :effort< "0:30")
-                          (:name "Due Soon"
-                                ; Use comma (backquote) to force eval
-                                :deadline (before ,(format-time-string "%Y-%m-%d %a" (days-from-now 21))))
-                          (:name "Scheduled soon"
-                                ; Use comma (backquote) to force eval
-                                :scheduled (before ,(format-time-string "%Y-%m-%d %a" (days-from-now 21))))
-                          (:name "Tasks"
-                                  :category "Tasks")
-                          (:name "Social"
-                                  :category "Social")
-                          (:auto-category t)
-                          ))))))
-
-      ("p" "Personal view"
-          ((alltodo "" (
-                       (org-agenda-overriding-header "TODO-List")
-                       (org-agenda-prefix-format (concat "📌 [%c] " org-agenda-custom-expression-scheduled " " org-agenda-custom-expression-deadline " "))
-                       ;(org-agenda-prefix-format "📌 [%c] ")
-                       (org-super-agenda-groups
-                        ; BACKTICK, not single quote
-                        ; if single quote is used, cannot use back quote to eval list expressions
-                        `(
-                          (:discard (:tag ("Chore" "Daily")))
-                          (:name "Trivial"
-                                :priority<= "C"
-                                :tag ("TRIVIAL" "UNIMPORTANT")
-                                :todo ("SOMEDAY" )
-                                :order 1000)
-                          (:name "Next to do"
-                                :todo "NEXT"
-                                :face (:background "black" :underline t))
-                          (:name "Important"
-                                :tag "Important"
-                                :and(
-                                    :not(:category "Social")
-                                    :priority "A"
-                                    )
-                                :face (:background "black" :underline t))
-                          (:name "Low-Hanging Fruit"
-                                :effort< "0:30")
-                          (:name "Tasks"
-                                  :category "Tasks")
+;; Use evil keys instead of having super-agenda overwrite
+;; https://github.com/alphapapa/org-super-agenda/issues/112
+;(setq org-super-agenda-header-map nil)
+;(org-super-agenda-mode)
+;
+;; For some dumb reason, %s is ignored in org-agenda-prefix-format
+;; https://stackoverflow.com/questions/58820073/s-in-org-agenda-prefix-format-doesnt-display-dates-in-the-todo-view
+;; Using a custom expression instead
+;(setq org-agenda-custom-expression-scheduled '"%(let ((scheduled (org-get-scheduled-time (point)))) (if scheduled (format-time-string \"%Y-%m-%d\" scheduled) \"\")) ")
+;(setq org-agenda-custom-expression-deadline '"%(let ((deadline (org-get-deadline-time (point)))) (if deadline (format-time-string \"%Y-%m-%d\" deadline) \"\")) ")
+;(setq org-agenda-custom-commands
+      ;`(("P" "Personal view Everything"
+         ;((agenda "" (
+                      ;(org-agenda-span 'day)        ; Daily Agenda
+                      ;(org-deadline-warning-days 7) ; 7 day advanced warning for deadlines
+                      ;(org-super-agenda-groups
+                       ;'((:name "Today"
+                                ;:time-grid t
+                                ;:date today
+                                ;:todo "TODAY"
+                                ;:or (
+                                  ;:scheduled (before ,(format-time-string "%Y-%m-%d %a" (days-from-now 1)))
+                                  ;:deadline (before ,(format-time-string "%Y-%m-%d %a" (days-from-now 1)))
+                                ;)
+                                ;:order 1)))))
+          ;(alltodo "" (
+                       ;(org-agenda-overriding-header "Everything TODO-List")
+                       ;(org-agenda-prefix-format (concat "📌 [%c] " org-agenda-custom-expression-scheduled " " org-agenda-custom-expression-deadline " "))
+                       ;;(org-agenda-prefix-format "📌 [%c] ")
+                       ;(org-super-agenda-groups
+                        ;; BACKTICK, not single quote
+                        ;; if single quote is used, cannot use back quote to eval list expressions
+                        ;`(
+                          ;(:discard (:tag ("Chore" "Daily")))
+                          ;(:name "Trivial"
+                                ;:priority<= "C"
+                                ;:tag ("TRIVIAL" "UNIMPORTANT")
+                                ;:todo ("SOMEDAY" )
+                                ;:order 1000)
+                          ;(:name "Next to do"
+                                ;:todo "NEXT"
+                                ;:face (:background "black" :underline t))
+                          ;(:name "Overdue"
+                                ;:face (:background "black" :underline t)
+                                ;:deadline past)
+                          ;(:name "Due Today"
+                                ;:face (:background "black" :underline t)
+                                ;:deadline today)
+                          ;(:name "Important"
+                                ;:tag "Important"
+                                ;:and(
+                                    ;:not(:category "Social")
+                                    ;:priority "A"
+                                    ;)
+                                ;:face (:background "black" :underline t))
+                          ;(:name "Low-Hanging Fruit"
+                                ;:effort< "0:30")
+                          ;(:name "Due Soon"
+                                ;; Use comma (backquote) to force eval
+                                ;:deadline (before ,(format-time-string "%Y-%m-%d %a" (days-from-now 21))))
+                          ;(:name "Scheduled soon"
+                                ;; Use comma (backquote) to force eval
+                                ;:scheduled (before ,(format-time-string "%Y-%m-%d %a" (days-from-now 21))))
+                          ;(:name "Tasks"
+                                  ;:category "Tasks")
                           ;(:name "Social"
                                   ;:category "Social")
-                          (:discard (:anything))
-                          ))))))))
-
-(map! :desc "Agenda View"
-      "<f12>" #'(lambda () (interactive) (org-agenda "p")))
+                          ;(:auto-category t)
+                          ;))))))
+;
+      ;("p" "Personal view"
+          ;((alltodo "" (
+                       ;(org-agenda-overriding-header "TODO-List")
+                       ;(org-agenda-prefix-format (concat "📌 [%c] " org-agenda-custom-expression-scheduled " " org-agenda-custom-expression-deadline " "))
+                       ;;(org-agenda-prefix-format "📌 [%c] ")
+                       ;(org-super-agenda-groups
+                        ;; BACKTICK, not single quote
+                        ;; if single quote is used, cannot use back quote to eval list expressions
+                        ;`(
+                          ;(:discard (:tag ("Chore" "Daily")))
+                          ;(:name "Trivial"
+                                ;:priority<= "C"
+                                ;:tag ("TRIVIAL" "UNIMPORTANT")
+                                ;:todo ("SOMEDAY" )
+                                ;:order 1000)
+                          ;(:name "Next to do"
+                                ;:todo "NEXT"
+                                ;:face (:background "black" :underline t))
+                          ;(:name "Important"
+                                ;:tag "Important"
+                                ;:and(
+                                    ;:not(:category "Social")
+                                    ;:priority "A"
+                                    ;)
+                                ;:face (:background "black" :underline t))
+                          ;(:name "Low-Hanging Fruit"
+                                ;:effort< "0:30")
+                          ;(:name "Tasks"
+                                  ;:category "Tasks")
+                          ;;(:name "Social"
+                                  ;;:category "Social")
+                          ;(:discard (:anything))
+                          ;))))))))
+;
+;(map! :desc "Agenda View"
+      ;"<f12>" #'(lambda () (interactive) (org-agenda "p")))
 
 (map! :leader
       :desc "List bookmarks"
@@ -437,26 +398,28 @@ Version 2019-11-04 2021-02-16"
       :desc "Load new theme"
       "h t" #'counsel-load-theme)
 
+;; If you use `org' and don't want your org files in the default location below,
+;; change `org-directory'. It must be set before org loads!
+(setq obsidian-directory "C:/Users/ryan.lloyd/OneDrive - XPLM Solution GmbH/Obsidian-XPLM/XPLM")
+
+; (obsidian-specify-path obsidian-directory)
+;; If you want a different directory of `obsidian-capture':
+(setq obsidian-inbox-directory "Inbox")
+
 (map! :leader
-      :desc "root org"
-      "j d o o" #'(lambda () (interactive) (dired org-directory))
-      :desc "org agenda"
-      "j d a" #'(lambda () (interactive) (dired (concat org-directory "/agenda")))
-      :leader
-      :desc "root work"
-      "j d w w" #'(lambda () (interactive) (dired (concat org-directory "/work/xplm")))
-      ;:leader
-      ;:desc "work ecad"
-      ;"j d w e" #'(lambda () (interactive) (dired (concat org-directory "/work/xplm/ecad")))
-      :leader
-      :desc "work time"
-      "j f w t" #'(lambda () (interactive) (find-file (concat org-directory "/work/xplm/time-tracking.org")))
-      :leader
-      :desc "root work"
-      "j f w w" #'(lambda () (interactive) (find-file (concat org-directory "/work/xplm/xplm.org")))
-      :leader
-      :desc "Edit todo.org"
-      "j f a" #'(lambda () (interactive) (find-file (concat org-directory "/agenda/todo.org")))
+      :map obsidian-mode-map
+      "o o" #'obsidian-hydra/body)
+(map! :leader
+      :map obsidian-mode-map
+      "j o" #'obsidian-jump)
+
+;; Activate detection of Obsidian vault
+; (global-obsidian-mode t)
+
+(map! :leader
+      :desc "Obsidian Work"
+      "j d o" #'(lambda () (interactive) (dired obsidian-directory))
+
       :leader
       :desc "Edit doom config.org"
       "j f c" #'(lambda () (interactive) (find-file "~/.doom.d/config.org"))
@@ -466,40 +429,15 @@ Version 2019-11-04 2021-02-16"
       :leader
       :desc "Edit doom init.el"
       "j f i" #'(lambda () (interactive) (find-file "~/.doom.d/init.el"))
+)
 
-; Journal
+(map! :leader
+      :desc "Search Dir"
+      "s" #'(lambda () (interactive) (counsel-rg))
       :leader
-      :desc "Daily Journal"
-      "j f d" #'(lambda () (interactive) (find-file obsidian-mode-daily-file))
-      :leader
-      :desc "Weekly Journal"
-      "j f w" #'(lambda () (interactive) (find-file obsidian-mode-weekly-file))
-      :leader
-      :desc "Weekly Report"
-      "j f r" #'(lambda () (interactive) (find-file obsidian-mode-weekly-report-file))
-      :leader
-      :desc "Monthly Journal"
-      "j f m" #'(lambda () (interactive) (find-file obsidian-mode-monthly-file))
-
-      :leader
-      :desc "Tomorrow Journal"
-      "j f n d" #'(lambda () (interactive) (find-file (obsidian-mode-future-daily-file 1)))
-      :leader
-      :desc "Next Week Journal"
-      "j f n w" #'(lambda () (interactive) (find-file (obsidian-mode-future-weekly-file 1)))
-      :leader
-      :desc "Next Month Journal"
-      "j f n m" #'(lambda () (interactive) (find-file (obsidian-mode-future-monthly-file 1)))
-
-      :leader
-      :desc "Yesterday Journal"
-      "j f p d" #'(lambda () (interactive) (find-file (obsidian-mode-future-daily-file -1)))
-      :leader
-      :desc "Prev Week Journal"
-      "j f p w" #'(lambda () (interactive) (find-file (obsidian-mode-future-weekly-file -1)))
-      :leader
-      :desc "Prev Month Journal"
-      "j f p m" #'(lambda () (interactive) (find-file (obsidian-mode-future-monthly-file -1))))
+      :desc "Projectile Search"
+      "p s" #'(lambda () (interactive) (counsel-projectile-rg))
+)
 
 (after! yasnippet
   (setq yas--default-user-snippets-dir "~/.doom.d/snippets"))
@@ -563,34 +501,3 @@ Version 2019-11-04 2021-02-16"
 
 (map! :desc "autoformat"
       "<f10>" #'(lambda () (interactive) (format-all-buffer)))
-
-(obsidian-specify-path "~/Dropbox/DropsyncFiles/ObsidianVault/V1")
-;; If you want a different directory of `obsidian-capture':
-(setq obsidian-inbox-directory "Inbox")
-
-;; Replace standard command with Obsidian.el's in obsidian vault:
-;(bind-key (kbd "C-c C-o") 'obsidian-follow-link-at-point 'obsidian-mode-map)
-; (map! :leader
-    ; :desc "Follow Link"
-    ; :map obsidian-mode-map
-    ; "o o" #'obsidian-follow-link-at-point)
-
-;; Use either `obsidian-insert-wikilink' or `obsidian-insert-link':
-; (map! :leader
-      ; :desc "Insert Link"
-      ; :map obsidian-mode-map
-      ; "o l" #'obsidian-insert-link)
-
-; (map! :leader
-      ; :map obsidian-mode-map
-      ; "o c" #'obsidian-capture)
-
-(map! :leader
-      :map obsidian-mode-map
-      "o o" #'obsidian-hydra/body)
-(map! :leader
-      :map obsidian-mode-map
-      "j o" #'obsidian-jump)
-
-;; Activate detectino of Obsidian vault
-(global-obsidian-mode t)
